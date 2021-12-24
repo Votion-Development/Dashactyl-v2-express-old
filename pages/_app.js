@@ -3,6 +3,7 @@ import NProgress from 'nprogress';
 import Link from 'next/link'
 import Head from 'next/head'
 import { AnimateSharedLayout } from "framer-motion"
+import config from "@constants/config";
 
 Router.events.on('routeChangeStart', (url) => {
   console.log(`Loading: ${url}`)
