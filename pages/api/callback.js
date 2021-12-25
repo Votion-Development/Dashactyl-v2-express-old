@@ -55,10 +55,10 @@ export default async function handler(req, res) {
 
     const guildInfo = await guildInfo_raw.json()
 
-    if (!Array.isArray(guilds)) return res.redirect("/?cannotgetguilds")
+    if (!Array.isArray(userInfo.guilds)) return res.redirect("/?cannotgetguilds")
 
     const check_if_banned = (await fetch(
-        `https://discord.com/api/guilds/${config.discord.guildID}/bans/${userinfo.id}`,
+        `https://discord.com/api/guilds/${config.discord.guildID}/bans/${userInfo.id}`,
         {
             method: 'get',
             headers: {
