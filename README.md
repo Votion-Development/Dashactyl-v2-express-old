@@ -1,3 +1,0 @@
-## Dashactyl-v2
-
-**THIS IS NOT READY FOR PRODUCTION USE**
