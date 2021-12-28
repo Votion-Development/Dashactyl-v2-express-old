@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const yaml = require('js-yaml');
 const fs = require('fs');
+const ejs = require('ejs')
 
 let theme = yaml.load(fs.readFileSync('./src/settings.yml', 'utf8')).website.theme;
 let pagesFile = yaml.load(fs.readFileSync(`./src/themes/${theme}/pages.yml`, 'utf8'));
@@ -58,11 +59,63 @@ router.get("*", async (req, res) => {
             };
         }
     }
-    if (!req.session.data || !req.session.data.userinfo) {
-        res.render(file, { data: null })
-    } else {
-        res.render(file, { data: req.session.data })
+    const resources = await functions.getUserResource(req) // I can't use "let {packageinfo, extra, total, current}".
+
+    packageinfo = resources.packageinfo
+    extra = resources.extra
+    total = resources.total
+    current = resources.current
+
+
+    const variables = { // Creates "variables" object for what variables are to be sent frontend.
+        variables: req.session.variables || null,
+        data: req.session.data || null,
+        settings: process.env,
+        theme_settings: process.pagesettings,
+        package: packageinfo,
+        extra: extra,
+        total: total,
+        current: current,
+        req: req,
+        special: special,
+        server_timers: server_timers,
+        status_replies: status_replies
     }
+
+    if (req.session.variables) delete req.session.variables
+
+    ejs.renderFile( // This renders the EJS file.
+        `./themes/${theme}/pages/${file}`, // This is the file that gets rendered.
+        variables, // Variables that are sent to frontend should be set here.
+        null,
+        async function (err, str) { // Function ran after the file has successfully rendered.
+            if (err) {
+                // EJS file had a rendering error.
+                res.status(500)
+                console.log(`[WEBSITE] An error has occured on path ${req._parsedUrl.pathname}:`)
+                console.log(err)
+
+                ejs.renderFile( // This renders the rendering error EJS file.
+                    `./themes/${theme}/pages/${pagesFile.pages.renderError.file}`, // This is the file that gets rendered.
+                    variables, // Variables that are sent to frontend should be set here.
+                    null,
+                    async function (err, str) { // Function ran after the file has successfully rendered.
+                        if (err) {
+                            // Rendering error page has a error.
+                            console.log(`[WEBSITE] An error has also occured while attempting to send the rendering error page on path ${req._parsedUrl.pathname}:`)
+                            console.log(err)
+                            return res.send('An error has occured while attempting to load this page. Please contact an administrator to fix this.') // Backup rendering error page.
+                        };
+
+                        res.send(str) // Sends rendering error page.
+                    })
+
+                return
+            };
+
+            if (type) res.type(type)
+            res.send(str) // Sends the page.
+        })
 })
 
 module.exports = router;
