@@ -1,0 +1,23 @@
+website:
+  port: 3000
+  secret: "Testing123"
+  secure: false # This option requires HTTPS.
+  theme: default
+
+discord:
+  id: ""
+  secret: ""
+  callbackpath: "http://localhost:3000/api/callback"
+  prompt: false
+
+  token: ""
+  guildID: "" # Add your server ID you want to force users to join on login here.
+
+pterodactyl:
+  domain: ""
+  key: "" # Make sure to higher/remove rate limits for application API keys, so the dashboard doesn't get rate limited.
+  generate_password_on_sign_up: true
+
+database:
+  connectionuri: 
+  name: dashactyl

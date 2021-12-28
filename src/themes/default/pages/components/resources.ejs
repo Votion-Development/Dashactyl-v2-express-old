@@ -1,0 +1,30 @@
+<section class="text-gray-600 body-font bg-white dark:bg-gray-900">
+  <div class="container px-5 py-24 mx-auto">
+    <div class="flex flex-wrap -m-4">
+      <div class="p-2 lg:w-1/4">
+        <div class="h-full bg-gray-100 bg-opacity-75 px-8 pt-8 pb-8 rounded-lg overflow-hidden text-center dark:bg-gray-800 dark:bg-opacity-40">
+          <h1 class="title-font sm:text-2xl text-xl font-medium text-gray-900 mb-3 dark:text-white"><i class="fa-solid fa-microchip"></i>&nbsp;CPU</h1>
+          <p class="leading-relaxed mb-3 dark:text-gray-400"><%= current.cpu %>%/<%= total.cpu %>%</p>
+        </div>
+      </div>
+      <div class="p-2 lg:w-1/4">
+        <div class="h-full bg-gray-100 bg-opacity-75 px-8 pt-8 pb-8 rounded-lg overflow-hidden text-center dark:bg-gray-800 dark:bg-opacity-40">
+          <h1 class="title-font sm:text-2xl text-xl font-medium text-gray-900 mb-3 dark:text-white"><i class="fa-solid fa-memory"></i>&nbsp;Memory</h1>
+          <p class="leading-relaxed mb-3 dark:text-gray-400"><%= current.memory %>MB/<%= total.memory %>MB</p>
+        </div>
+      </div>
+      <div class="p-2 lg:w-1/4">
+        <div class="h-full bg-gray-100 bg-opacity-75 px-8 pt-8 pb-8 rounded-lg overflow-hidden text-center dark:bg-gray-800 dark:bg-opacity-40">
+          <h1 class="title-font sm:text-2xl text-xl font-medium text-gray-900 mb-3 dark:text-white"><i class="fa-solid fa-hard-drive"></i>&nbsp;Storage</h1>
+          <p class="leading-relaxed mb-3 dark:text-gray-400"><%= current.disk %>MB/<%= total.disk %>MB</p>
+        </div>
+      </div>
+      <div class="p-2 lg:w-1/4">
+        <div class="h-full bg-gray-100 bg-opacity-75 px-8 pt-8 pb-8 rounded-lg overflow-hidden text-center dark:bg-gray-800 dark:bg-opacity-40">
+          <h1 class="title-font sm:text-2xl text-xl font-medium text-gray-900 mb-3 dark:text-white"><i class="fa-solid fa-server"></i>&nbsp;Servers</h1>
+          <p class="leading-relaxed mb-3 dark:text-gray-400"><%= current.servers %>/<%= total.servers %></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,24 @@
+# Don't touch this unless you know what you are doing.
+
+index: login.ejs
+nopermission: nopermission.ejs
+notfound: 404.ejs
+renderfail: rendererror.ejs
+
+pages:
+  login:
+    file: login.ejs
+    permission: 0
+    type: ejs
+  dashboard:
+    file: dashboard.ejs
+    permission: 1
+    type: ejs
+  error404:
+    file: 404.ejs
+    permission: 0
+    type: ejs
+  error403:
+    file: 404.ejs
+    permission: 0
+    type: ejs

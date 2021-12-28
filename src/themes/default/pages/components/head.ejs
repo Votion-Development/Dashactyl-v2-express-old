@@ -1,0 +1,66 @@
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://unpkg.com/@themesberg/flowbite@1.2.0/dist/flowbite.min.css" />
+    <link rel="stylesheet" href="/assets/css/all.min.css">
+
+    <script>
+        // On page load or when changing themes, best to add inline in `head` to avoid FOUC
+        if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark')
+        }
+          
+        if(!localStorage.theme) {
+          localStorage.theme = 'light'
+        }
+        
+        // On page load or when changing themes, best to add inline in `head` to avoid FOUC
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+          document.documentElement.classList.add('dark')
+        } else {
+          document.documentElement.classList.remove('dark')
+        }
+      
+        function switchModes() {
+          if(localStorage.theme == "light") {
+            localStorage.theme = 'dark';
+            window.location.reload();
+          } else {
+            localStorage.theme = 'light';
+            window.location.reload();
+          }
+        }
+      
+      </script>
+
+      <style>
+        /* width */
+        ::-webkit-scrollbar {
+          width: 16px;
+          height: 16px;
+        }
+
+        /* Track */
+        ::-webkit-scrollbar-track {
+          border-radius: 100vh;
+          background: #edf2f7;
+        }
+
+        /* Handle */
+        ::-webkit-scrollbar-thumb {
+          background: #cbd5e0;
+          border-radius: 100vh;
+          border: 3px solid #edf2f7;
+        }
+
+        /* Handle on hover */
+        ::-webkit-scrollbar-thumb:hover {
+          background: #a0aec0;
+        }
+      </style>
+</head>
+
+<body>
+  <script src="https://unpkg.com/@themesberg/flowbite@1.2.0/dist/flowbite.bundle.js"></script>
+</body>

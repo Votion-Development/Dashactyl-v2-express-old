@@ -1,0 +1,183 @@
+<html class="bg-white dark:bg-gray-900">
+    <%- include('./components/head') %>
+    <%- include('./components/navbar') %>
+    <%#- include('./components/variables') %>
+    <%- include('./components/resources') %>
+
+    <% if (!current.servers) { %>
+        <section class="bg-white dark:bg-gray-900 min-h-screen">
+            <div class="container mx-auto px-4 py-20">
+                <div class="flex flex-col">
+                    <div class="overflow-x-auto sm:-mx-6 lg:-mx-8">
+                        <div class="inline-block py-2 min-w-full sm:px-6 lg:px-8">
+                            <div class="overflow-hidden shadow-md sm:rounded-lg">
+                                <table class="min-w-full">
+                                    <thead class="bg-gray-50 dark:bg-gray-700">
+                                        <tr>
+                                            <th scope="col" class="py-3 px-6 text-xs font-medium tracking-wider text-left text-gray-700 uppercase dark:text-white">
+                                                Server Name
+                                            </th>
+                                            <th scope="col" class="py-3 px-6 text-xs font-medium tracking-wider text-left text-gray-700 uppercase dark:text-white">
+                                                CPU
+                                            </th>
+                                            <th scope="col" class="py-3 px-6 text-xs font-medium tracking-wider text-left text-gray-700 uppercase dark:text-white">
+                                                Memory
+                                            </th>
+                                            <th scope="col" class="py-3 px-6 text-xs font-medium tracking-wider text-left text-gray-700 uppercase dark:text-white">
+                                                Storage
+                                            </th>
+                                            <th scope="col" class="py-3 px-6 text-xs font-medium tracking-wider text-left text-gray-700 uppercase dark:text-white">
+                                                Renew By
+                                            </th>
+                                            <th scope="col" class="py-3 px-6 text-xs font-medium tracking-wider text-left text-gray-700 uppercase dark:text-white">
+                                                Manage
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                                            <td class="py-4 px-6 text-sm text-gray-500 whitespace-nowrap text-black dark:text-white">
+                                                You have no servers.
+                                                <a href="/servers/new" class="text-indigo-600">Feel free to make one.</a>
+                                            </td>
+                                            <td class="py-4 px-6 text-sm text-gray-500 whitespace-nowrap text-black dark:text-white"></td>
+                                            <td class="py-4 px-6 text-sm text-gray-500 whitespace-nowrap text-black dark:text-white"></td>
+                                            <td class="py-4 px-6 text-sm text-gray-500 whitespace-nowrap text-black dark:text-white"></td>
+                                            <td class="py-4 px-6 text-sm text-gray-500 whitespace-nowrap text-black dark:text-white"></td>
+                                            <td class="py-4 px-6 text-sm text-gray-500 whitespace-nowrap text-black dark:text-white"></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        You have no servers.
+    <% } else { %>
+        <section class="bg-white dark:bg-gray-900 min-h-screen">
+            <div class="container mx-auto px-4 py-20">
+                <div class="flex flex-col">
+                    <div class="overflow-x-auto sm:-mx-6 lg:-mx-8">
+                        <div class="inline-block py-2 min-w-full sm:px-6 lg:px-8">
+                            <div class="overflow-hidden shadow-md sm:rounded-lg">
+                                <table class="min-w-full">
+                                    <thead class="bg-gray-50 dark:bg-gray-700">
+                                        <tr>
+                                            <th scope="col" class="py-3 px-6 text-xs font-medium tracking-wider text-left text-gray-700 uppercase dark:text-white">
+                                                Server Name
+                                            </th>
+                                            <th scope="col" class="py-3 px-6 text-xs font-medium tracking-wider text-left text-gray-700 uppercase dark:text-white">
+                                                CPU
+                                            </th>
+                                            <th scope="col" class="py-3 px-6 text-xs font-medium tracking-wider text-left text-gray-700 uppercase dark:text-white">
+                                                Memory
+                                            </th>
+                                            <th scope="col" class="py-3 px-6 text-xs font-medium tracking-wider text-left text-gray-700 uppercase dark:text-white">
+                                                Storage
+                                            </th>
+                                            <th scope="col" class="py-3 px-6 text-xs font-medium tracking-wider text-left text-gray-700 uppercase dark:text-white">
+                                                Renew By
+                                            </th>
+                                            <th scope="col" class="py-3 px-6 text-xs font-medium tracking-wider text-left text-gray-700 uppercase dark:text-white">
+                                                Manage
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <% let currentDate = Date.now() %>
+                                        <% for (let server of data.panelinfo.relationships.servers.data) { %>
+                                        <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                                            <td class="py-4 px-6 text-sm text-gray-500 whitespace-nowrap dark:text-white">
+                                                <%= server.attributes.name.length> 15 ? server.attributes.name.slice(0, 12) + "..." : server.attributes.name %>
+                                            </td>
+                                            <td class="py-4 px-6 text-sm text-gray-500 whitespace-nowrap dark:text-white">
+                                                <%= server.attributes.limits.cpu %>%
+                                            </td>
+                                            <td class="py-4 px-6 text-sm text-gray-500 whitespace-nowrap dark:text-white">
+                                                <%= server.attributes.limits.memory %>MB
+                                            </td>
+                                            <td class="py-4 px-6 text-sm text-gray-500 whitespace-nowrap dark:text-white">
+                                                <%= server.attributes.limits.disk %>MB
+                                            </td>
+                                            <td class="py-4 px-6 text-sm text-gray-500 whitespace-nowrap dark:text-white">
+                                                <% if (Object.entries(settings.eggs).filter(egg => server.attributes.egg == egg[1].info.egg).length == 1) { %>
+                                                    <% if (server_timers[server.attributes.id] && server_timers[server.attributes.id].action !== "???") { %>
+                                                        <% // https://stackoverflow.com/questions/9763441/milliseconds-to-time-in-javascript
+                                                            let s = server_timers[server.attributes.id].timer - currentDate;
+                                                            if (s < 0) s = 0;
+                                                            let ms = s % 1000;
+                                                            s = (s - ms) / 1000;
+                                                            let secs = s % 60;
+                                                            s = (s - secs) / 60;
+                                                            let mins = s % 60;
+                                                            let hrs = (s - mins) / 60;
+                                                            let output = hrs + ' hours';
+                                                        %>
+                                                        <% if (server_timers[server.attributes.id].action == "auto") { %>
+                                                            Automatically renewing in: <%= output %>
+                                                        <% } else if (server_timers[server.attributes.id].action == "suspend") { %>
+                                                            <%= output %>
+                                                        <% } else if (server_timers[server.attributes.id].action == "deletion") { %>
+                                                            Server deletion in: <%= output %><br><b>RENEW ASAP</b>
+                                                        <% } %>
+                                                    <% } else { %>
+                                                        None.
+                                                    <% } %>
+                                                <% } %>
+                                            </td>
+                                            <td class="py-4 px-6 text-sm text-gray-500 whitespace-nowrap dark:text-white">
+                                                <%
+                                                    let renewcost;
+                                                    let renewcoststring;
+                                                    renewcoststring = settings.renewal.renew_fee + " coin" + (settings.renewal.renew_fee == 1 ? "" : "s");
+                                                %>
+                                                <% if (server_timers[server.attributes.id] && server_timers[server.attributes.id].action !== "???") { %>
+                                                <form action="/servers/renew/<%= server.attributes.id %>" method="POST">
+                                                    <input type="submit" id="one" style="display: none" value="Renew (<%= renewcoststring %>)">
+                                                </form>
+
+                                                <% console.log(server) %>
+
+                                                <div class="flex space-x-4">
+                                                    <a href="<%= process.env.pterodactyl.domain%>/server/<%= server.attributes.identifier %>" class="flex-auto text-white bg-green-500 border-0 py-2 px-8 focus:outline-none hover:bg-green-600 rounded text-lg text-center">Access</a>
+                                                    <button onclick="document.getElementById('one').click()" type="submit" class="flex-auto text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg">Renew</button>
+                                                    <% if (server_timers[server.attributes.id].action !== "deletion") { %> 
+                                                        <button onclick="document.getElementById('two').click()" type="submit" class="flex-auto text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg">Auto-Renew</button>
+                                                    <% } %>
+                                                    <button onclick="document.getElementById('three').click()" type="submit" class="flex-auto text-white bg-red-500 border-0 py-2 px-8 focus:outline-none hover:bg-red-600 rounded text-lg">Delete</button>
+                                                    <button onclick="window.location.href = '/servers/modify?id=<%= server.attributes.id %>'" class="flex-auto text-white bg-yellow-300 border-0 py-2 px-8 focus:outline-none hover:bg-yellow-400 rounded text-lg">Modify </button>
+                                                <% if (server_timers[server.attributes.id].action !== "deletion") { %>
+                                                    <form action="/servers/auto_renew/<%= server.attributes.id %>" method="POST">
+                                                        <% let toggle_type = server_timers[server.attributes.id].action == "auto" ? "Disable" : "Enable" %>
+                                                        <input type="submit" style="display: none" id="two" value="<%= toggle_type %> automatic renewals.">
+                                                    </form>
+                                                    <% } %>
+                                                <% } else { %>
+                                                    <button onclick="document.getElementById('three').click()" class="flex-auto text-white bg-red-500 border-0 py-2 px-8 focus:outline-none hover:bg-red-600 rounded text-lg">Delete</button> 
+                                                    <button onclick="window.location.href = '/servers/modify?id=<%= server.attributes.id %>'" class="flex-auto text-white bg-yellow-300 border-0 py-2 px-8 focus:outline-none hover:bg-yellow-400 rounded text-lg">Modify</button>
+                                                    </div>
+                                                <% } %>
+                                                <% if (Object.entries(settings.eggs).filter(egg=> server.attributes.egg == egg[1].info.egg).length == 1) { %>
+                                                    <form action="/servers/renew/<%= server.attributes.id %>" method="POST">
+                                                        <input type="submit" style="display: none;">
+                                                    </form>
+                                                <% } %>
+                                                <form action="/servers/delete/<%= server.attributes.id %>" method="POST">
+                                                    <input type="submit" id="three"style="display: none;"value="Delete">
+                                                </form>
+                                            </td>
+                                        </tr>
+                                        <% } %>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    <% } %>
+    <%- include('components/footer') %>
+</html>

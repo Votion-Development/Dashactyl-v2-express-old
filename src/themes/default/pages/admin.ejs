@@ -1,0 +1,163 @@
+<script>
+    async function asyncAlert(func) {
+        alert(JSON.stringify(await func));
+    };
+</script>
+
+<script src="/assets/js/admin.js"></script>
+
+<html class="bg-white dark:bg-gray-900">
+    <%- include('./components/head') %>
+    <%- include('./components/navbar') %>
+    <%- include('./components/variables') %>
+    <%- include('./components/resources') %>
+    <section class="text-gray-600 bg-white dark:text-gray-400 dark:bg-gray-900 body-font">
+        <div class="lg:w-3/6 md:w-1/2 bg-gray-100 dark:bg-gray-800 dark:bg-opacity-50 rounded-lg p-8 flex flex-col md:mx-auto w-full mt-10 md:mt-0">
+            <h2 class="text-gray-900 dark:text-white text-lg font-medium title-font mb-5">User Info</h2>
+            <div class="mb-4">
+                <label for="userinfo_id" class="leading-7 text-sm text-gray-400">Discord ID</label>
+                <input type="text" id="userinfo_id" name="userinfo_id" class="w-full bg-white dark:bg-gray-600 dark:bg-opacity-20 focus:bg-transparent focus:ring-2 focus:ring-indigo-900 rounded border border-gray-600 focus:border-indigo-500 text-base outline-none text-gray-700 dark:text-gray-100 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+            </div>
+            <div class="flex space-x-4">
+                <button onclick="asyncAlert(userInfo(document.getElementById('userinfo_id').value))" type="submit" class="flex-auto text-white bg-green-500 border-0 py-2 px-8 focus:outline-none hover:bg-green-600 rounded text-lg">Get</button>
+                <button onclick="asyncAlert(blacklistUser(document.getElementById('userinfo_id').value))" type="submit" class="flex-auto text-white bg-black border-0 py-2 px-8 focus:outline-none hover:bg-gray-900 rounded text-lg">Blacklist</button>
+                <button onclick="asyncAlert(unblacklistUser(document.getElementById('userinfo_id').value))" type="submit" class="flex-auto text-white bg-red-500 border-0 py-2 px-8 focus:outline-none hover:bg-red-600 rounded text-lg">Unblacklist</button>
+            </div>
+        </div>
+    </section>
+
+    <section class="text-gray-600 bg-white dark:text-gray-400 dark:bg-gray-900 body-font py-12">
+        <div class="lg:w-3/6 md:w-1/2 bg-gray-100 dark:bg-gray-800 dark:bg-opacity-50 rounded-lg p-8 flex flex-col md:mx-auto w-full mt-10 md:mt-0">
+            <h2 class="text-gray-900 dark:text-white text-lg font-medium title-font mb-5">Coins</h2>
+            <div class="mb-4">
+                <label for="userinfo_id" class="leading-7 text-sm text-gray-400">Discord ID</label>
+                <input type="text" id="userinfo_id" name="userinfo_id" class="w-full bg-white dark:bg-gray-600 dark:bg-opacity-20 focus:bg-transparent focus:ring-2 focus:ring-indigo-900 rounded border border-gray-600 focus:border-indigo-500 text-base outline-none text-gray-700 dark:text-gray-100 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+            </div>
+            <div class="flex space-x-4">
+                <button onclick="asyncAlert(setCoins(document.getElementById('setcoins_id').value, parseFloat(document.getElementById('setcoins_coins').value), true))" type="submit" class="flex-auto text-white bg-green-500 border-0 py-2 px-8 focus:outline-none hover:bg-green-600 rounded text-lg">Add</button>
+                <button onclick="asyncAlert(setCoins(document.getElementById('setcoins_id').value, parseFloat(document.getElementById('setcoins_coins').value)))" type="submit" class="flex-auto text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg">Set</button>
+            </div>
+        </div>
+    </section>
+
+    <section class="text-gray-600 bg-white dark:text-gray-400 dark:bg-gray-900 body-font py-12">
+        <div class="lg:w-3/6 md:w-1/2 bg-gray-100 dark:bg-gray-800 dark:bg-opacity-50 rounded-lg p-8 flex flex-col md:mx-auto w-full mt-10 md:mt-0">
+            <h2 class="text-gray-900 dark:text-white text-lg font-medium title-font mb-5">Set Package</h2>
+            <div class="mb-4">
+                <label for="userinfo_id" class="leading-7 text-sm text-gray-400">Discord ID</label>
+                <select id="userinfo_id" class="w-full bg-white dark:bg-gray-600 dark:bg-opacity-20 focus:bg-transparent focus:ring-2 focus:ring-indigo-900 rounded border border-gray-600 focus:border-indigo-500 text-base outline-none text-gray-700 dark:text-gray-100 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                    <option value="">Default package. (ID: <%= settings.packages.default %>)</option>
+                    <% for (let [ id, info ] of Object.entries(settings.packages.list)) { %>
+                        <option value="<%= id %>"><%= info.display %> (ID: <%= id %>) | Memory: <%= info.memory %>MB, Disk: <%= info.disk %>, CPU: <%= info.cpu %>, Servers: <%= info.servers %></option>
+                    <% } %>
+                </select>
+            </div>
+            <button onclick="asyncAlert(setPackage(document.getElementById('setpackage_id').value, document.getElementById('setpackage_package').value.length == 0 ? null : document.getElementById('setpackage_package').value))" type="submit" class="flex-auto text-white bg-green-500 border-0 py-2 px-8 focus:outline-none hover:bg-green-600 rounded text-lg">Set</button>
+        </div>
+    </section>
+
+    <section class="text-gray-600 bg-white dark:text-gray-400 dark:bg-gray-900 body-font py-12">
+        <div class="lg:w-3/6 md:w-1/2 bg-gray-100 dark:bg-gray-800 dark:bg-opacity-50 rounded-lg p-8 flex flex-col md:mx-auto w-full mt-10 md:mt-0">
+            <h2 class="text-gray-900 dark:text-white text-lg font-medium title-font mb-5">Extra Resources</h2>
+            <div class="mb-4">
+                <label for="setresources_id" class="leading-7 text-sm text-gray-400">Discord ID</label>
+                <input type="text" id="setresources_id" name="setresources_id" class="w-full bg-white dark:bg-gray-600 dark:bg-opacity-20 focus:bg-transparent focus:ring-2 focus:ring-indigo-900 rounded border border-gray-600 focus:border-indigo-500 text-base outline-none text-gray-700 dark:text-gray-100 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+            </div>
+            <div class="mb-4">
+                <label for="setresources_cpu" class="leading-7 text-sm text-gray-400">CPU</label>
+                <input type="text" id="setresources_cpu" name="setresources_cpu" class="w-full bg-white dark:bg-gray-600 dark:bg-opacity-20 focus:bg-transparent focus:ring-2 focus:ring-indigo-900 rounded border border-gray-600 focus:border-indigo-500 text-base outline-none text-gray-700 dark:text-gray-100 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+            </div>
+            <div class="mb-4">
+                <label for="setresources_memory" class="leading-7 text-sm text-gray-400">Memory</label>
+                <input type="text" id="setresources_memory" name="setresources_memory" class="w-full bg-white dark:bg-gray-600 dark:bg-opacity-20 focus:bg-transparent focus:ring-2 focus:ring-indigo-900 rounded border border-gray-600 focus:border-indigo-500 text-base outline-none text-gray-700 dark:text-gray-100 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+            </div>
+            <div class="mb-4">
+                <label for="setresources_disk" class="leading-7 text-sm text-gray-400">Disk</label>
+                <input type="text" id="setresources_disk" name="setresources_disk" class="w-full bg-white dark:bg-gray-600 dark:bg-opacity-20 focus:bg-transparent focus:ring-2 focus:ring-indigo-900 rounded border border-gray-600 focus:border-indigo-500 text-base outline-none text-gray-700 dark:text-gray-100 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+            </div>
+            <div class="mb-4">
+                <label for="setresources_servers" class="leading-7 text-sm text-gray-400">Servers</label>
+                <input type="text" id="setresources_servers" name="setresources_servers" class="w-full bg-white dark:bg-gray-600 dark:bg-opacity-20 focus:bg-transparent focus:ring-2 focus:ring-indigo-900 rounded border border-gray-600 focus:border-indigo-500 text-base outline-none text-gray-700 dark:text-gray-100 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+            </div>
+            <div class="flex space-x-4">
+                <button onclick="asyncAlert(setResources(document.getElementById('setresources_id').value, parseFloat(document.getElementById('setresources_memory').value), parseFloat(document.getElementById('setresources_disk').value), parseFloat(document.getElementById('setresources_cpu').value), parseFloat(document.getElementById('setresources_servers').value), true))" type="submit" class="flex-auto text-white bg-green-500 border-0 py-2 px-8 focus:outline-none hover:bg-green-600 rounded text-lg">Add</button>
+                <button onclick="asyncAlert(setResources(document.getElementById('setresources_id').value, parseFloat(document.getElementById('setresources_memory').value), parseFloat(document.getElementById('setresources_disk').value), parseFloat(document.getElementById('setresources_cpu').value), parseFloat(document.getElementById('setresources_servers').value)))" type="submit" class="flex-auto text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg">Set</button>
+            </div>
+        </div>
+    </section>
+
+    <section class="text-gray-600 bg-white dark:text-gray-400 dark:bg-gray-900 body-font py-12">
+        <div class="lg:w-3/6 md:w-1/2 bg-gray-100 dark:bg-gray-800 dark:bg-opacity-50 rounded-lg p-8 flex flex-col md:mx-auto w-full mt-10 md:mt-0">
+            <h2 class="text-gray-900 dark:text-white text-lg font-medium title-font mb-5">Coupons</h2>
+            <div class="mb-4">
+                <label for="createcoupon_code" class="leading-7 text-sm text-gray-400">Code</label>
+                <input type="text" id="createcoupon_code" name="createcoupon_code" class="w-full bg-white dark:bg-gray-600 dark:bg-opacity-20 focus:bg-transparent focus:ring-2 focus:ring-indigo-900 rounded border border-gray-600 focus:border-indigo-500 text-base outline-none text-gray-700 dark:text-gray-100 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+            </div>
+            <div class="mb-4">
+                <label for="createcoupon_coins" class="leading-7 text-sm text-gray-400">Coins</label>
+                <input type="text" id="createcoupon_coins" name="createcoupon_coins" class="w-full bg-white dark:bg-gray-600 dark:bg-opacity-20 focus:bg-transparent focus:ring-2 focus:ring-indigo-900 rounded border border-gray-600 focus:border-indigo-500 text-base outline-none text-gray-700 dark:text-gray-100 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+            </div>
+            <div class="mb-4">
+                <label for="createcoupon_cpu" class="leading-7 text-sm text-gray-400">CPU</label>
+                <input type="text" id="createcoupon_cpu" name="createcoupon_cpu" class="w-full bg-white dark:bg-gray-600 dark:bg-opacity-20 focus:bg-transparent focus:ring-2 focus:ring-indigo-900 rounded border border-gray-600 focus:border-indigo-500 text-base outline-none text-gray-700 dark:text-gray-100 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+            </div>
+            <div class="mb-4">
+                <label for="createcoupon_memory" class="leading-7 text-sm text-gray-400">Memory</label>
+                <input type="text" id="createcoupon_memory" name="createcoupon_memory" class="w-full bg-white dark:bg-gray-600 dark:bg-opacity-20 focus:bg-transparent focus:ring-2 focus:ring-indigo-900 rounded border border-gray-600 focus:border-indigo-500 text-base outline-none text-gray-700 dark:text-gray-100 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+            </div>
+            <div class="mb-4">
+                <label for="createcoupon_disk" class="leading-7 text-sm text-gray-400">Disk</label>
+                <input type="text" id="createcoupon_disk" name="createcoupon_disk" class="w-full bg-white dark:bg-gray-600 dark:bg-opacity-20 focus:bg-transparent focus:ring-2 focus:ring-indigo-900 rounded border border-gray-600 focus:border-indigo-500 text-base outline-none text-gray-700 dark:text-gray-100 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+            </div>
+            <div class="mb-4">
+                <label for="setresources_servers" class="leading-7 text-sm text-gray-400">Servers</label>
+                <input type="text" id="createcoupon_servers" name="createcoupon_servers" class="w-full bg-white dark:bg-gray-600 dark:bg-opacity-20 focus:bg-transparent focus:ring-2 focus:ring-indigo-900 rounded border border-gray-600 focus:border-indigo-500 text-base outline-none text-gray-700 dark:text-gray-100 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+            </div>
+            <div class="flex space-x-4">
+                <button onclick="asyncAlert(createCoupon(document.getElementById('createcoupon_code').value, parseFloat(document.getElementById('createcoupon_coins').value), parseFloat(document.getElementById('createcoupon_memory').value), parseFloat(document.getElementById('createcoupon_disk').value), parseFloat(document.getElementById('createcoupon_cpu').value), parseFloat(document.getElementById('createcoupon_servers').value)))" type="submit" class="flex-auto text-white bg-green-500 border-0 py-2 px-8 focus:outline-none hover:bg-green-600 rounded text-lg">Add</button>
+                <button onclick="asyncAlert(revokeCoupon(document.getElementById('createcoupon_code').value));" type="submit" class="flex-auto text-white bg-red-500 border-0 py-2 px-8 focus:outline-none hover:bg-red-600 rounded text-lg">Revoke</button>
+            </div>
+        </div>
+    </section>
+
+    <section class="text-gray-600 bg-white dark:text-gray-400 dark:bg-gray-900 body-font py-12">
+        <div class="lg:w-3/6 md:w-1/2 bg-gray-100 dark:bg-gray-800 dark:bg-opacity-50 rounded-lg p-8 flex flex-col md:mx-auto w-full mt-10 md:mt-0">
+            <h2 class="text-gray-900 dark:text-white text-lg font-medium title-font mb-5">Join For Resources</h2>
+            <div class="mb-4">
+                <label for="createj4r_j4rid" class="leading-7 text-sm text-gray-400">J4R ID</label>
+                <input type="text" id="createj4r_j4rid" name="createj4r_j4rid" class="w-full bg-white dark:bg-gray-600 dark:bg-opacity-20 focus:bg-transparent focus:ring-2 focus:ring-indigo-900 rounded border border-gray-600 focus:border-indigo-500 text-base outline-none text-gray-700 dark:text-gray-100 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+            </div>
+            <div class="mb-4">
+                <label for="createj4r_serverid" class="leading-7 text-sm text-gray-400">Discord Server ID</label>
+                <input type="text" id="createj4r_serverid" name="createj4r_serverid" class="w-full bg-white dark:bg-gray-600 dark:bg-opacity-20 focus:bg-transparent focus:ring-2 focus:ring-indigo-900 rounded border border-gray-600 focus:border-indigo-500 text-base outline-none text-gray-700 dark:text-gray-100 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+            </div>
+            <div class="mb-4">
+                <label for="createj4r_expiresonindays" class="leading-7 text-sm text-gray-400">Expire in (Days)</label>
+                <input type="text" id="createj4r_expiresonindays" name="createj4r_expiresonindays" class="w-full bg-white dark:bg-gray-600 dark:bg-opacity-20 focus:bg-transparent focus:ring-2 focus:ring-indigo-900 rounded border border-gray-600 focus:border-indigo-500 text-base outline-none text-gray-700 dark:text-gray-100 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+            </div>
+            <div class="mb-4">
+                <label for="createj4r_cpu" class="leading-7 text-sm text-gray-400">CPU</label>
+                <input type="text" id="createj4r_cpu" name="createj4r_cpu" class="w-full bg-white dark:bg-gray-600 dark:bg-opacity-20 focus:bg-transparent focus:ring-2 focus:ring-indigo-900 rounded border border-gray-600 focus:border-indigo-500 text-base outline-none text-gray-700 dark:text-gray-100 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+            </div>
+            <div class="mb-4">
+                <label for="createj4r_memory" class="leading-7 text-sm text-gray-400">Memory</label>
+                <input type="text" id="createj4r_memory" name="createj4r_memory" class="w-full bg-white dark:bg-gray-600 dark:bg-opacity-20 focus:bg-transparent focus:ring-2 focus:ring-indigo-900 rounded border border-gray-600 focus:border-indigo-500 text-base outline-none text-gray-700 dark:text-gray-100 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+            </div>
+            <div class="mb-4">
+                <label for="createj4r_disk" class="leading-7 text-sm text-gray-400">Disk</label>
+                <input type="text" id="createj4r_disk" name="createj4r_disk" class="w-full bg-white dark:bg-gray-600 dark:bg-opacity-20 focus:bg-transparent focus:ring-2 focus:ring-indigo-900 rounded border border-gray-600 focus:border-indigo-500 text-base outline-none text-gray-700 dark:text-gray-100 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+            </div>
+            <div class="mb-4">
+                <label for="createj4r_servers" class="leading-7 text-sm text-gray-400">Servers</label>
+                <input type="text" id="createj4r_servers" name="createj4r_servers" class="w-full bg-white dark:bg-gray-600 dark:bg-opacity-20 focus:bg-transparent focus:ring-2 focus:ring-indigo-900 rounded border border-gray-600 focus:border-indigo-500 text-base outline-none text-gray-700 dark:text-gray-100 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+            </div>
+            <button onclick="asyncAlert(createJ4R(document.getElementById('createj4r_j4rid').value, document.getElementById('createj4r_serverid').value, parseFloat(document.getElementById('createj4r_expiresonindays').value), parseFloat(document.getElementById('createj4r_memory').value), parseFloat(document.getElementById('createj4r_disk').value), parseFloat(document.getElementById('createj4r_cpu').value), parseFloat(document.getElementById('createj4r_servers').value)));" type="submit" class="flex-auto text-white bg-green-500 border-0 py-2 px-8 focus:outline-none hover:bg-green-600 rounded text-lg">Add</button>
+            <span class="text-sm py-2">You cannot modify or remove a J4R after it has been made. Make sure you have every information correct before creating the J4R.<br>
+                Keep in mind you can have multiple J4Rs on the same server.<br>
+                Users will need to click "Update user information." after joining the corresponding J4R server.</p>
+            <span>
+        </div>
+    </section>
+
+    <%- include('./components/footer') %>
+</html>

@@ -1,0 +1,28 @@
+<%- include('./components/head') %>
+<%- include('./components/navbar') %>
+
+<section class="text-gray-600 body-font dark:bg-gray-900 dark:text-gray-400 min-h-screen">
+  <%#- include('./components/variables') %>
+  <div class="container px-5 py-24 mx-auto flex flex-wrap items-center">
+    <div class="lg:w-3/5 md:w-1/2 md:pr-16 lg:pr-0 pr-0">
+      <h1 class="title-font font-medium text-3xl text-gray-900 dark:text-white">Dashactyl</h1>
+      <p class="leading-relaxed mt-4">An awesome client panel for Pterodactyl.</p>
+    </div>
+    <% if(data) { %>
+    <div class="lg:w-2/6 md:w-1/2 bg-gray-100 rounded-lg p-8 flex flex-col md:ml-auto w-full mt-10 md:mt-0 dark:bg-gray-800 dark:bg-opacity-50">
+      <h2 class="text-gray-900 text-lg font-medium title-font mb-5 dark:text-white">Continue as</h2>
+      <div class="flex space-x-4">
+        <button onclick="window.location.href = '/dashboard'" class="flex-auto text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg"><img class="inline-block h-7 w-7 rounded-full" src="https://cdn.discordapp.com/avatars/<%= data.userinfo.id %>/<%= data.userinfo.avatar %>.webp">&nbsp; <%= data.userinfo.username %></button>
+        <button onclick="window.location.href = '/dashboard'" class="flex-auto text-black dark:text-white bg-white dark:bg-gray-900 border-0 py-2 px-8 focus:outline-none hover:bg-gray-50 dark:hover:bg-gray-800 rounded text-lg"><i class="fa-solid fa-door-open"></i>&nbsp;Logout</button>
+      </div>
+    </div>
+    <% } else { %>
+    <div class="lg:w-2/6 md:w-1/2 bg-gray-100 rounded-lg p-8 flex flex-col md:ml-auto w-full mt-10 md:mt-0 dark:bg-gray-800 dark:bg-opacity-50">
+      <h2 class="text-gray-900 text-lg font-medium title-font mb-5 dark:text-white">Login with</h2>
+      <button onclick="window.location.href = '/api/login'" class="text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg"><i class="fa-brands fa-discord"></i>&nbsp; Discord</button>
+    </div>
+    <% } %>
+  </div>
+</section>
+
+<%- include('./components/footer') %>

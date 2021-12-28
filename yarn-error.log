@@ -1,0 +1,36 @@
+Arguments: 
+  C:\Program Files\nodejs\node.exe C:\Program Files\nodejs\node_modules\yarn\bin\yarn.js add better-sqlite3 better-sqlite3-session-storage body-parser ejs express express-rate-limit express-session js-yaml mongodb node-fetch@2.6.1
+
+PATH: 
+  C:\Program Files (x86)\VMware\VMware Player\bin\;C:\Program Files\Oculus\Support\oculus-runtime;C:\Program Files\Common Files\Oracle\Java\javapath;C:\Program Files (x86)\Common Files\Oracle\Java\javapath;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Windows\System32\OpenSSH\;C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;C:\Users\Jamie\AppData\Roaming\nvm;C:\Program Files\nodejs;C:\Program Files\Docker\Docker\resources\bin;C:\ProgramData\DockerDesktop\version-bin;C:\Program Files\Git\cmd;C:\Program Files\Git LFS;C:\Users\Jamie\Desktop\BuildTools\apache-maven-3.6.0\bin;C:\Program Files (x86)\Windows Kits\10\Windows Performance Toolkit\;C:\Program Files (x86)\Windows Kits\10\Microsoft Application Virtualization\Sequencer\;C:\Program Files\NVIDIA Corporation\NVIDIA NvDLISR;C:\Program Files\dotnet\;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files\PuTTY\;C:\Users\Jamie\AppData\Local\Programs\Python\Python38\Scripts\;C:\Users\Jamie\AppData\Local\Programs\Python\Python38\;C:\Users\Jamie\.windows-build-tools\python27\;C:\Users\Jamie\AppData\Local\Programs\Python\Python39\Scripts\;C:\Users\Jamie\AppData\Local\Programs\Python\Python39\;C:\Users\Jamie\AppData\Local\Microsoft\WindowsApps;C:\Users\Jamie\AppData\Local\GitHubDesktop\bin;C:\Users\Jamie\AppData\Local\Programs\Microsoft VS Code\bin;C:\Users\Jamie\AppData\Roaming\nvm;C:\Program Files\nodejs;C:\Users\Jamie\Desktop\BuildTools\apache-maven-3.6.0\bin;C:\Users\Jamie\.dotnet\tools;C:\Users\Jamie\AppData\Local\Microsoft\WindowsApps;
+
+Yarn version: 
+  1.22.17
+
+Node version: 
+  16.13.0
+
+Platform: 
+  win32 x64
+
+Trace: 
+  Error: https://registry.yarnpkg.com/better-sqlite3-session-storage: Not found
+      at Request.params.callback [as _callback] (C:\Users\Jamie\AppData\Roaming\nvm\v16.13.0\node_modules\yarn\lib\cli.js:67029:18)
+      at Request.self.callback (C:\Users\Jamie\AppData\Roaming\nvm\v16.13.0\node_modules\yarn\lib\cli.js:140883:22)
+      at Request.emit (node:events:390:28)
+      at Request.<anonymous> (C:\Users\Jamie\AppData\Roaming\nvm\v16.13.0\node_modules\yarn\lib\cli.js:141855:10)
+      at Request.emit (node:events:390:28)
+      at IncomingMessage.<anonymous> (C:\Users\Jamie\AppData\Roaming\nvm\v16.13.0\node_modules\yarn\lib\cli.js:141777:12)
+      at Object.onceWrapper (node:events:509:28)
+      at IncomingMessage.emit (node:events:402:35)
+      at endReadableNT (node:internal/streams/readable:1343:12)
+      at processTicksAndRejections (node:internal/process/task_queues:83:21)
+
+npm manifest: 
+  No manifest
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile
