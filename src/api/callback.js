@@ -99,7 +99,7 @@ router.get("/callback", async (req, res) => {
     let dbInfo = await db.fetchAccount(userInfo.id)
     let panel_id
     let panelInfo
-    let generated_password = null
+    let generated_password = `Not Set`
 
     if (!dbInfo) {
         panelInfo = await db.createAccount(userInfo.id, userInfo.email, userInfo.username, userInfo.discriminator)
@@ -111,11 +111,11 @@ router.get("/callback", async (req, res) => {
             discordID: userInfo.id,
             pterodactylID: panelInfo.id,
             coins: 0,
-            package: null,
-            memory: null,
-            disk: null,
-            cpu: null,
-            servers: null
+            package: `Not Set`,
+            memory: 0,
+            disk: 0,
+            cpu: 0,
+            servers: 0
         }
     } else {
         panel_id = dbInfo.pterodactylID

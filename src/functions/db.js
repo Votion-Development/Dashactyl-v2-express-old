@@ -16,51 +16,60 @@ const db = client.db(settings.database.name);
     await client.connect();
     console.log('Connected to the database.');
 
-    db.listCollections({name: "users"})
-    .next(function(err, collinfo) {
-        if (!collinfo) {
-            db.createCollection("users", function(err, res) {
-                if (err) console.log("There was an error creating the required collections in the mongodb database. Please check the connection URI is correct and that the user has the correct permissions to make collections.");
-              });
-              console.log("The USERS collection has been added to the database.")
-        }
-    });
-    db.listCollections({name: "sessions"})
-    .next(function(err, collinfo) {
-        if (!collinfo) {
-            db.createCollection("sessions", function(err, res) {
-                if (err) console.log("There was an error creating the required collections in the mongodb database. Please check the connection URI is correct and that the user has the correct permissions to make collections.");
-              });
-              console.log("The SESSIONS collection has been added to the database.")
-        }
-    });
-    db.listCollections({name: "coupons"})
-    .next(function(err, collinfo) {
-        if (!collinfo) {
-            db.createCollection("coupons", function(err, res) {
-                if (err) console.log("There was an error creating the required collections in the mongodb database. Please check the connection URI is correct and that the user has the correct permissions to make collections.");
-              });
-            console.log("The COUPONS collection has been added to the database.")
-        }
-    });
-    db.listCollections({name: "renewal_timer"})
-    .next(function(err, collinfo) {
-        if (!collinfo) {
-            db.createCollection("renewal_timer", function(err, res) {
-                if (err) console.log("There was an error creating the required collections in the mongodb database. Please check the connection URI is correct and that the user has the correct permissions to make collections.");
-              });
-            console.log("The RENEWAL_TIMER collection has been added to the database.")
-        }
-    });
-    db.listCollections({name: "blacklisted"})
-    .next(function(err, collinfo) {
-        if (!collinfo) {
-            db.createCollection("blacklisted", function(err, res) {
-                if (err) console.log("There was an error creating the required collections in the mongodb database. Please check the connection URI is correct and that the user has the correct permissions to make collections.");
-              });
-            console.log("The BLACKLISTED collection has been added to the database.")
-        }
-    });
+    db.listCollections({ name: "users" })
+        .next(function (err, collinfo) {
+            if (!collinfo) {
+                db.createCollection("users", function (err, res) {
+                    if (err) console.log("There was an error creating the required collections in the mongodb database. Please check the connection URI is correct and that the user has the correct permissions to make collections.");
+                });
+                console.log("The USERS collection has been added to the database.")
+            }
+        });
+    db.listCollections({ name: "sessions" })
+        .next(function (err, collinfo) {
+            if (!collinfo) {
+                db.createCollection("sessions", function (err, res) {
+                    if (err) console.log("There was an error creating the required collections in the mongodb database. Please check the connection URI is correct and that the user has the correct permissions to make collections.");
+                });
+                console.log("The SESSIONS collection has been added to the database.")
+            }
+        });
+    db.listCollections({ name: "coupons" })
+        .next(function (err, collinfo) {
+            if (!collinfo) {
+                db.createCollection("coupons", function (err, res) {
+                    if (err) console.log("There was an error creating the required collections in the mongodb database. Please check the connection URI is correct and that the user has the correct permissions to make collections.");
+                });
+                console.log("The COUPONS collection has been added to the database.")
+            }
+        });
+    db.listCollections({ name: "renewal_timer" })
+        .next(function (err, collinfo) {
+            if (!collinfo) {
+                db.createCollection("renewal_timer", function (err, res) {
+                    if (err) console.log("There was an error creating the required collections in the mongodb database. Please check the connection URI is correct and that the user has the correct permissions to make collections.");
+                });
+                console.log("The RENEWAL_TIMER collection has been added to the database.")
+            }
+        });
+    db.listCollections({ name: "blacklisted" })
+        .next(function (err, collinfo) {
+            if (!collinfo) {
+                db.createCollection("blacklisted", function (err, res) {
+                    if (err) console.log("There was an error creating the required collections in the mongodb database. Please check the connection URI is correct and that the user has the correct permissions to make collections.");
+                });
+                console.log("The BLACKLISTED collection has been added to the database.")
+            }
+        });
+    db.listCollections({ name: "packages" })
+        .next(function (err, collinfo) {
+            if (!collinfo) {
+                db.createCollection("packages", function (err, res) {
+                    if (err) console.log("There was an error creating the required collections in the mongodb database. Please check the connection URI is correct and that the user has the correct permissions to make collections.");
+                });
+                console.log("The PACKAGES collection has been added to the database.")
+            }
+        });
 })();
 
 module.exports = {
@@ -79,20 +88,20 @@ module.exports = {
 
             const account = await fetch(
                 `${settings.pterodactyl.domain}/api/application/users`, {
-                    method: 'POST',
-                    headers: {
-                        "Accept": "application/json",
-                        "Content-Type": "application/json",
-                        "Authorization": `Bearer ${settings.pterodactyl.key}`
-                    },
-                    body: JSON.stringify({
-                        username: id,
-                        email: email,
-                        first_name: first_name,
-                        last_name: last_name,
-                        password: settings.pterodactyl.generate_password_on_sign_up ? generated_password : undefined
-                    })
-                }
+                method: 'POST',
+                headers: {
+                    "Accept": "application/json",
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${settings.pterodactyl.key}`
+                },
+                body: JSON.stringify({
+                    username: id,
+                    email: email,
+                    first_name: first_name,
+                    last_name: last_name,
+                    password: settings.pterodactyl.generate_password_on_sign_up ? generated_password : undefined
+                })
+            }
             )
 
             console.log(await account.status)
@@ -125,12 +134,12 @@ module.exports = {
             } else {
                 const accountlistjson = await fetch(
                     `${settings.pterodactyl.domain}/api/application/users?include=servers&filter[email]=${encodeURIComponent(email)}`, {
-                        method: 'get',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            Authorization: `Bearer ${settings.pterodactyl.key}`
-                        }
+                    method: 'get',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: `Bearer ${settings.pterodactyl.key}`
                     }
+                }
                 )
 
                 const accountlist = await accountlistjson.json()
@@ -176,6 +185,41 @@ module.exports = {
             return false;
         } else {
             return true;
+        }
+    },
+
+    async getPackages() {
+        const db = client.db("dashactyl");
+        const collection = db.collection("packages");
+
+        const foundResults = await collection.find({}).toArray();
+
+        if (!foundResults) return null;
+
+        return foundResults
+    },
+
+    async addPackage(name, memory, disk, cpu, servers) {
+        const db = client.db("dashactyl");
+        const collection = db.collection("packages");
+
+        const filteredDocs = await collection.findOne({
+            name: name
+        });
+
+        if (!filteredDocs) {
+            await collection.insertOne({
+                name: name,
+                memory: memory,
+                disk: disk,
+                cpu: cpu,
+                servers: servers,
+                dateadded: Date(),
+            });
+
+            return true;
+        } else {
+            return false;
         }
     }
 }

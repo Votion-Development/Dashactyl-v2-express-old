@@ -3,11 +3,15 @@ const router = express.Router();
 const yaml = require('js-yaml');
 const fs = require('fs');
 const ejs = require('ejs')
+const getUserResources = require("./getUserResources.js")
 
 let theme = yaml.load(fs.readFileSync('./src/settings.yml', 'utf8')).website.theme;
 let pagesFile = yaml.load(fs.readFileSync(`./src/themes/${theme}/pages.yml`, 'utf8'));
 
+const settings = yaml.load(fs.readFileSync('./src/settings.yml', 'utf8'))
+
 let file;
+let type;
 
 router.get("*", async (req, res) => {
     if (req._parsedUrl.pathname === "/") {
@@ -27,6 +31,8 @@ router.get("*", async (req, res) => {
 
             if (!exists.type) return res.send("There is an error with the pages.yml file and the route you specified has no file type attached to it. Please contact an administrator to get this sorted.")
 
+            type = exists.type
+
             if (permission === 0 || permission === 1 || permission === 2) { // Checks if it is a valid permission number.
                 /*
                 0 = Anyone can view the page.
@@ -38,6 +44,7 @@ router.get("*", async (req, res) => {
                     if (!req.session.data || !req.session.data.userinfo) {
                         res.status(403)
                         file = pagesFile.pages.error403.file // The value of "nopermission" on pages.yml is the page to be shown.
+                        console.log(file)
                     } else {
                         if (permission === 1) {
                             file = exists.file
@@ -59,36 +66,52 @@ router.get("*", async (req, res) => {
             };
         }
     }
-    const resources = await functions.getUserResource(req) // I can't use "let {packageinfo, extra, total, current}".
 
-    packageinfo = resources.packageinfo
-    extra = resources.extra
-    total = resources.total
-    current = resources.current
+    let packageinfo = `Not Set`
+    let extra = 0
+    let total = 0
+    let current = 0
+    let server_timers = 0
 
+    const resources = await getUserResources(req) // I can't use "let {packageinfo, extra, total, current}".
+
+    if (!resources) {
+        packageinfo = `Not Set`
+        extra = 0
+        total = 0
+        current = 0
+        server_timers = 0
+    } else {
+        packageinfo = resources.packageinfo
+        extra = resources.extra
+        total = resources.total
+        current = resources.current
+    }
 
     const variables = { // Creates "variables" object for what variables are to be sent frontend.
         variables: req.session.variables || null,
         data: req.session.data || null,
-        settings: process.env,
-        theme_settings: process.pagesettings,
+        settings: settings,
+        theme_settings: pagesFile,
         package: packageinfo,
         extra: extra,
         total: total,
         current: current,
         req: req,
-        special: special,
         server_timers: server_timers,
-        status_replies: status_replies
     }
+
+    console.log(variables)
+    console.log(file)
 
     if (req.session.variables) delete req.session.variables
 
     ejs.renderFile( // This renders the EJS file.
-        `./themes/${theme}/pages/${file}`, // This is the file that gets rendered.
+        `./src/themes/${theme}/pages/${file}`, // This is the file that gets rendered.
         variables, // Variables that are sent to frontend should be set here.
         null,
         async function (err, str) { // Function ran after the file has successfully rendered.
+            console.log(str)
             if (err) {
                 // EJS file had a rendering error.
                 res.status(500)
@@ -96,7 +119,7 @@ router.get("*", async (req, res) => {
                 console.log(err)
 
                 ejs.renderFile( // This renders the rendering error EJS file.
-                    `./themes/${theme}/pages/${pagesFile.pages.renderError.file}`, // This is the file that gets rendered.
+                    `./src/themes/${theme}/pages/${pagesFile.pages.renderError.file}`, // This is the file that gets rendered.
                     variables, // Variables that are sent to frontend should be set here.
                     null,
                     async function (err, str) { // Function ran after the file has successfully rendered.
