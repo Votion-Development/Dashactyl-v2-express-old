@@ -40,8 +40,9 @@ router.get("*", async (req, res) => {
                 2 = Only administrators can view the page. 404 if not an administrator.
                 */
                 if (permission === 1 || permission === 2) {
+                    console.log(req.session)
                     console.log(req.session.data)
-                    if (!req.session.data || !req.session.data.userinfo) {
+                    if (!req.session.data || !req.session.data.userInfo) {
                         res.status(403)
                         file = pagesFile.pages.error403.file // The value of "nopermission" on pages.yml is the page to be shown.
                         console.log(file)
@@ -49,7 +50,7 @@ router.get("*", async (req, res) => {
                         if (permission === 1) {
                             file = exists.file
                         } else if (permission === 2) { // Check if the route is administrator only.
-                            if (!req.session.data.panelinfo.root_admin) { // If user isn't an administrator.
+                            if (!req.session.data.panelInfo.root_admin) { // If user isn't an administrator.
                                 res.status(404)
                                 file = pagesFile.pages.error403.file
                             } else { // If user is an administrator.
@@ -74,6 +75,19 @@ router.get("*", async (req, res) => {
     let server_timers = 0
 
     const resources = await getUserResources(req) // I can't use "let {packageinfo, extra, total, current}".
+
+    if (resources === `noPackage`) {
+        res.status(500)
+        let serverInvite
+
+        if (!settings.discord.invite) {
+            serverInvite = `notSet`
+        } else {
+            serverInvite = settings.discord.invite
+        }
+
+        return res.render(pagesFile.pages.error500.file, { error: "Your package assigned to your user does not match any package in the database.", serverInvite: serverInvite } )
+    }
 
     if (!resources) {
         packageinfo = `Not Set`
@@ -101,44 +115,9 @@ router.get("*", async (req, res) => {
         server_timers: server_timers,
     }
 
-    console.log(variables)
-    console.log(file)
-
     if (req.session.variables) delete req.session.variables
 
-    ejs.renderFile( // This renders the EJS file.
-        `./src/themes/${theme}/pages/${file}`, // This is the file that gets rendered.
-        variables, // Variables that are sent to frontend should be set here.
-        null,
-        async function (err, str) { // Function ran after the file has successfully rendered.
-            console.log(str)
-            if (err) {
-                // EJS file had a rendering error.
-                res.status(500)
-                console.log(`[WEBSITE] An error has occured on path ${req._parsedUrl.pathname}:`)
-                console.log(err)
-
-                ejs.renderFile( // This renders the rendering error EJS file.
-                    `./src/themes/${theme}/pages/${pagesFile.pages.renderError.file}`, // This is the file that gets rendered.
-                    variables, // Variables that are sent to frontend should be set here.
-                    null,
-                    async function (err, str) { // Function ran after the file has successfully rendered.
-                        if (err) {
-                            // Rendering error page has a error.
-                            console.log(`[WEBSITE] An error has also occured while attempting to send the rendering error page on path ${req._parsedUrl.pathname}:`)
-                            console.log(err)
-                            return res.send('An error has occured while attempting to load this page. Please contact an administrator to fix this.') // Backup rendering error page.
-                        };
-
-                        res.send(str) // Sends rendering error page.
-                    })
-
-                return
-            };
-
-            if (type) res.type(type)
-            res.send(str) // Sends the page.
-        })
+    res.render(`${file}`, variables)
 })
 
 module.exports = router;

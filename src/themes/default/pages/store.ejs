@@ -6,7 +6,7 @@
     <section class="text-gray-600 bg-white dark:text-gray-400 dark:bg-gray-900 body-font min-h-screen">
         <form action="/store/buy_resources" method="POST" class="container px-5 py-12 mx-auto flex flex-wrap items-center">
           <div class="lg:w-3/6 md:w-1/2 bg-gray-100 dark:bg-gray-800 dark:bg-opacity-50 rounded-lg p-8 flex flex-col md:mx-auto w-full mt-10 md:mt-0">
-            <h2 class="text-gray-900 dark:text-white text-lg font-medium title-font mb-5">Store&nbsp;<span class="bg-gray-100 text-gray-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-gray-300"><%= data.dbinfo.coins %> coins</span></h2>
+            <h2 class="text-gray-900 dark:text-white text-lg font-medium title-font mb-5">Store&nbsp;<span class="bg-gray-100 text-gray-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-gray-300"><%= data.dbInfo.coins %> coins</span></h2>
             <% if (settings.store.cpu.enabled) { %>
             <div class="mb-4">
                 <label for="cpu" class="leading-7 text-sm text-gray-400">CPU&nbsp;<span class="bg-gray-100 text-gray-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-gray-300"><%= current.cpu %>%/<%= total.cpu %>%</span></label>

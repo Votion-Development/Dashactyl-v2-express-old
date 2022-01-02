@@ -17,7 +17,7 @@ pages:
     file: 403.ejs
     permission: 0
     type: ejs
-  renderError:
+  error500:
     file: 500.ejs
     permission: 0
     type: ejs

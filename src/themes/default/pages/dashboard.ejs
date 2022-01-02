@@ -87,7 +87,7 @@
                                     </thead>
                                     <tbody>
                                         <% let currentDate = Date.now() %>
-                                        <% for (let server of data.panelinfo.relationships.servers.data) { %>
+                                        <% for (let server of data.panelInfo.relationships.servers.data) { %>
                                         <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
                                             <td class="py-4 px-6 text-sm text-gray-500 whitespace-nowrap dark:text-white">
                                                 <%= server.attributes.name.length> 15 ? server.attributes.name.slice(0, 12) + "..." : server.attributes.name %>

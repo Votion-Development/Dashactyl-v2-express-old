@@ -153,6 +153,12 @@ module.exports = {
                         pterodactylID: userid,
                         email: email,
                         username: username,
+                        coins: 0,
+                        package: `Not Set`,
+                        memory: 0,
+                        disk: 0,
+                        cpu: 0,
+                        servers: 0,
                         dateadded: Date(),
                     });
 
@@ -188,18 +194,7 @@ module.exports = {
         }
     },
 
-    async getPackages() {
-        const db = client.db("dashactyl");
-        const collection = db.collection("packages");
-
-        const foundResults = await collection.find({}).toArray();
-
-        if (!foundResults) return null;
-
-        return foundResults
-    },
-
-    async addPackage(name, memory, disk, cpu, servers) {
+    async addPackage(name, memory, disk, cpu, servers, isDefault) {
         const db = client.db("dashactyl");
         const collection = db.collection("packages");
 
@@ -214,6 +209,7 @@ module.exports = {
                 disk: disk,
                 cpu: cpu,
                 servers: servers,
+                default: isDefault,
                 dateadded: Date(),
             });
 
@@ -221,5 +217,36 @@ module.exports = {
         } else {
             return false;
         }
-    }
+    },
+
+    async getPackages() {
+        const db = client.db("dashactyl");
+        const collection = db.collection("packages");
+
+        const foundResults = await collection.find({}).toArray();
+
+        return foundResults
+    },
+
+    async getDefaultPackage() {
+        const db = client.db("dashactyl");
+        const collection = db.collection("packages");
+
+        const filteredDocs = await collection.findOne({
+            default: true
+        });
+
+        return filteredDocs;
+    },
+
+    async findPackage(package) {
+        const db = client.db("dashactyl");
+        const collection = db.collection("packages");
+
+        const filteredDocs = await collection.findOne({
+            name: package
+        });
+
+        return filteredDocs;
+    },
 }

@@ -9,8 +9,8 @@
           <div id="dropdownInformation" class="hidden z-10 w-44 text-base list-none bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700 dark:divide-gray-600">
             <div class="py-3 px-4 text-gray-900 dark:text-white">
               <span class="block text-sm font-medium"><%= data.userInfo.username %></span>
-              <span class="block text-sm truncat"><%= data.dbinfo.coins %> coins</span>
-              <span class="block text-sm truncat">Package: <%= data.dbinfo.package %></span>
+              <span class="block text-sm truncat"><%= data.dbInfo.coins %> coins</span>
+              <span class="block text-sm truncat">Package: <%= data.dbInfo.package %></span>
             </div>
             <ul class="py-1" aria-labelledby="dropdownInformationButton">
               <li>
@@ -57,7 +57,7 @@
           <li>
             <a href="/earn/afk" class="block py-2 pr-4 pl-3 text-gray-700 border-b border-gray-100 hover:bg-gray-50 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 md:dark:hover:text-white dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"><i class="fa-solid fa-coins"></i>&nbsp;AFK</a>
           </li>
-          <% if(data.panelinfo.root_admin == true) { %>
+          <% if(data.panelInfo.root_admin == true) { %>
           <li>
             <a href="/admin" class="block py-2 pr-4 pl-3 text-gray-700 border-b border-gray-100 hover:bg-gray-50 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 md:dark:hover:text-white dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"><i class="fa-solid fa-user-gear"></i>&nbsp;Admin</a>
           </li>

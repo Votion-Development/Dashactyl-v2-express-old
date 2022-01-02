@@ -2,13 +2,13 @@
     <script>
         window.location.href = "/dashboard";
     </script>
-  <% } else if (data.panelinfo.relationships.servers.data.filter(server => server.attributes.id.toString() == req.query.id).length !== 1) { %>
+  <% } else if (data.panelInfo.relationships.servers.data.filter(server => server.attributes.id.toString() == req.query.id).length !== 1) { %>
     <script>
         window.location.href = "/dashboard";
     </script>
   <% } else { %>
     <% 
-        let server = data.panelinfo.relationships.servers.data.filter(server => server.attributes.id == req.query.id)[0].attributes;
+        let server = data.panelInfo.relationships.servers.data.filter(server => server.attributes.id == req.query.id)[0].attributes;
     %>
   
     <% if (Object.entries(settings.eggs).filter(egg => server.egg == egg[1].info.egg).length !== 1) { %>

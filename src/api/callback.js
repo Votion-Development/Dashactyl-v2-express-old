@@ -110,12 +110,15 @@ router.get("/callback", async (req, res) => {
         dbInfo = {
             discordID: userInfo.id,
             pterodactylID: panelInfo.id,
+            email: userInfo.email,
+            username: userInfo.username,
             coins: 0,
             package: `Not Set`,
             memory: 0,
             disk: 0,
             cpu: 0,
-            servers: 0
+            servers: 0,
+            dateadded: Date(),
         }
     } else {
         panel_id = dbInfo.pterodactylID
@@ -148,6 +151,8 @@ router.get("/callback", async (req, res) => {
             password: generated_password
         }
     }
+
+    req.session.save();
 
     res.redirect("/dashboard")
 })
