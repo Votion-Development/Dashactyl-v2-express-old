@@ -104,9 +104,7 @@ module.exports = {
             }
             )
 
-            console.log(await account.status)
-
-            if (await account.status === 201) {
+            if (account.status === 201) {
                 const accountinfo = await account.json()
 
                 await collection.insertOne({
@@ -143,10 +141,10 @@ module.exports = {
                 )
 
                 const accountlist = await accountlistjson.json()
-                const user = accountlist.data.filter(acc => acc.attributes.email === email)
+                const user = accountlist.data.find(acc => acc.attributes.email === email)
 
-                if (user.length === 1) {
-                    const userid = user[0].attributes.id
+                if (user) {
+                    const userid = user.attributes.id
 
                     await collection.insertOne({
                         discordID: id,
@@ -162,7 +160,7 @@ module.exports = {
                         dateadded: Date(),
                     });
 
-                    return user[0].attributes
+                    return user.attributes
                 };
             }
         }
