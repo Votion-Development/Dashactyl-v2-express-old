@@ -5,10 +5,9 @@ const fs = require('fs');
 const ejs = require('ejs')
 const getUserResources = require("./getUserResources.js")
 
-let theme = yaml.load(fs.readFileSync('./src/settings.yml', 'utf8')).website.theme;
-let pagesFile = yaml.load(fs.readFileSync(`./src/themes/${theme}/pages.yml`, 'utf8'));
-
-const settings = yaml.load(fs.readFileSync('./src/settings.yml', 'utf8'))
+const theme = yaml.load(fs.readFileSync('./src/settings.yml', 'utf8')).website.theme;
+const pagesFile = yaml.load(fs.readFileSync(`./src/themes/${theme}/pages.yml`, 'utf8'));
+const settings = yaml.load(fs.readFileSync('./src/settings.yml', 'utf8'));
 
 let file, type;
 
@@ -23,7 +22,7 @@ router.get("*", async (req, res) => {
 
         const exists = pagesFile.pages[pathname];
 
-        if (typeof exists === "undefined") {
+        if (!exists) {
             res.status(404)
             file = pagesFile.pages.error404.file
         } else {
@@ -103,7 +102,7 @@ router.get("*", async (req, res) => {
     const variables = { // Creates "variables" object for what variables are to be sent frontend.
         variables: req.session.variables || null,
         data: req.session.data || null,
-        settings: settings,
+        settings,
         theme_settings: pagesFile,
         package: packageinfo,
         extra: extra,
