@@ -5,18 +5,27 @@ pages:
     file: login.ejs
     permission: 0
     type: ejs
+  
   dashboard:
     file: dashboard.ejs
     permission: 1
     type: ejs
+  
+  servers/new:
+    file: create_server.ejs
+    permission: 1
+    type: ejs
+  
   error404:
     file: 404.ejs
     permission: 0
     type: ejs
+  
   error403:
     file: 403.ejs
     permission: 0
     type: ejs
+  
   error500:
     file: 500.ejs
     permission: 0
