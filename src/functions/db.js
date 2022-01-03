@@ -236,7 +236,9 @@ module.exports = {
             default: true
         });
 
-        return filteredDocs;
+        const package = filteredDocs.name
+
+        return package;
     },
 
     async findPackage(package) {
