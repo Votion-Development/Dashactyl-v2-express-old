@@ -25,15 +25,10 @@ const getUserResources = async (req) => {
         memory: 0,
         disk: 0,
         cpu: 0,
-        servers: req.session.data.panelInfo.relationships.servers.data.length
+        servers: req.session.data.panelInfo.relationships.servers.data
     }
 
-    return {
-        package,
-        extra: extra,
-        total: total,
-        current: current
-    }
+    return { package, extra, total, current }
 }
 
 
