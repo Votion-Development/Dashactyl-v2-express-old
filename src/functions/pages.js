@@ -15,6 +15,9 @@ router.get("*", async (req, res) => {
     if (req._parsedUrl.pathname === "/") {
         if (!req.session.data) return res.redirect('/api/login');
         file = pagesFile.pages.login.file;
+    } else if (req._parsedUrl.pathname === "/logout") {
+        req.session.destroy()
+        return res.redirect("/")
     } else {
         let pathname = req._parsedUrl.pathname.slice(1)
 
@@ -42,7 +45,6 @@ router.get("*", async (req, res) => {
                     if (!req.session.data?.userInfo) {
                         res.status(403)
                         file = pagesFile.pages.error403.file // The value of "nopermission" on pages.yml is the page to be shown.
-                        console.log(file)
                     } else {
                         if (permission === 1) {
                             file = exists.file
@@ -71,19 +73,24 @@ router.get("*", async (req, res) => {
     let current = 0
     let server_timers = 0
 
-    const resources = await getUserResources(req) // I can't use "let {packageinfo, extra, total, current}".
+    let resources
 
-    if (resources === `noPackage`) {
-        res.status(500)
-        let serverInvite
+    if (req.session.data && req.session.data.dbInfo) {
 
-        if (!settings.discord.invite) {
-            serverInvite = `notSet`
-        } else {
-            serverInvite = settings.discord.invite
+        resources = await getUserResources(req) // I can't use "let {packageinfo, extra, total, current}".
+
+        if (resources === `noPackage`) {
+            res.status(500)
+            let serverInvite
+
+            if (!settings.discord.invite) {
+                serverInvite = `notSet`
+            } else {
+                serverInvite = settings.discord.invite
+            }
+
+            return res.render(pagesFile.pages.error500.file, { error: "Your package assigned to your user does not match any package in the database.", serverInvite: serverInvite })
         }
-
-        return res.render(pagesFile.pages.error500.file, { error: "Your package assigned to your user does not match any package in the database.", serverInvite: serverInvite } )
     }
 
     if (!resources) {

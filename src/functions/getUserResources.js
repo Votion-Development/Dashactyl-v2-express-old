@@ -1,31 +1,45 @@
 const db = require("./db.js")
 
 const getUserResources = async (req) => {
-    req.session.data.dbinfo = await db.fetchAccount(req.session.data.userInfo.id)
+    req.session.data.dbInfo = await db.fetchAccount(req.session.data.userInfo.id);
+    if (!req.session.data.dbInfo.package) {
+        req.session.data.dbInfo.package = await db.getDefaultPackage()
 
-    const package = await db.findPackage(req.session.data.dbinfo.package)
-    if (!package) return `noPackage`;
-    const { dbinfo } = req.session.data;
+        await req.session.save()
+    }
+
+    const { package } = req.session.data.dbInfo;
+    const defaultPackage = await db.findPackage(package);
+    if (package != defaultPackage?.name) return `noPackage`;
+    const { dbInfo } = req.session.data;
 
     const extra = {
-        memory: dbinfo.memory || 0,
-        disk: dbinfo.disk || 0,
-        cpu: dbinfo.cpu || 0,
-        servers: dbinfo.servers || 0
+        memory: dbInfo.memory || 0,
+        disk: dbInfo.disk || 0,
+        cpu: dbInfo.cpu || 0,
+        servers: dbInfo.servers || 0
     }
 
     const total = {
-        memory: package.memory + extra.memory,
-        disk: package.disk + extra.disk,
-        cpu: package.cpu + extra.cpu,
-        servers: package.servers + extra.servers
+        memory: defaultPackage.memory + extra.memory,
+        disk: defaultPackage.disk + extra.disk,
+        cpu: defaultPackage.cpu + extra.cpu,
+        servers: defaultPackage.servers + extra.servers
     }
+
+    const user_servers = req.session.data.panelInfo.relationships.servers.data
 
     const current = {
         memory: 0,
         disk: 0,
         cpu: 0,
         servers: req.session.data.panelInfo.relationships.servers.data.length
+    }
+
+    for (const server of user_servers) {
+        current.memory += server.attributes.limits.memory
+        current.disk += server.attributes.limits.disk
+        current.cpu += server.attributes.limits.cpu
     }
 
     return {

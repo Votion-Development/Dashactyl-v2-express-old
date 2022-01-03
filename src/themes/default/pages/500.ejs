@@ -12,7 +12,6 @@
                     <button class="text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg">Discord server invite link not set.</button>
                   <% } else { %>
                     <h1 class="text-gray-900 dark:text-white text-lg text-3xl font-medium title-font mb-5 text-center">Error 500 | <%= error %></h1>
-                    <% console.log(serverInvite) %>
                     <button onclick="window.location.href = '<%= serverInvite %>'" class="text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg">Contact Server Administrators</button>
                   <% } %>
               <% } %>

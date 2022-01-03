@@ -101,6 +101,8 @@ router.get("/callback", async (req, res) => {
     let panelInfo
     let generated_password = `Not Set`
 
+    console.log(dbInfo)
+
     if (!dbInfo) {
         panelInfo = await db.createAccount(userInfo.id, userInfo.email, userInfo.username, userInfo.discriminator)
         panel_id = panelInfo.id
@@ -152,7 +154,7 @@ router.get("/callback", async (req, res) => {
         }
     }
 
-    req.session.save();
+    await req.session.save();
 
     res.redirect("/dashboard")
 })
