@@ -1,32 +1,30 @@
 const db = require("./db.js")
 
 const getUserResources = async (req) => {
+    req.session.data.dbInfo = await db.fetchAccount(req.session.data.userInfo.id);
     if (!req.session.data.dbInfo.package) {
-        req.session.data.dbInfo.package === await db.getDefaultPackage()
+        req.session.data.dbInfo.package = await db.getDefaultPackage()
 
         await req.session.save()
     }
 
-    let package = req.session.data.dbInfo.package || await db.getDefaultPackage()
-
-    req.session.data.dbInfo = await db.fetchAccount(req.session.data.userInfo.id)
-
-    const usersPackage = await db.findPackage(package)
-
-    if (usersPackage.name != package) return `noPackage`;
+    const { package } = req.session.data.dbInfo;
+    const defaultPackage = await db.findPackage(package);
+    if (package != defaultPackage?.name) return `noPackage`;
+    const { dbInfo } = req.session.data;
 
     const extra = {
-        memory: req.session.data.dbInfo.memory || 0,
-        disk: req.session.data.dbInfo.disk || 0,
-        cpu: req.session.data.dbInfo.cpu || 0,
-        servers: req.session.data.dbInfo.servers || 0
+        memory: dbInfo.memory || 0,
+        disk: dbInfo.disk || 0,
+        cpu: dbInfo.cpu || 0,
+        servers: dbInfo.servers || 0
     }
 
     const total = {
-        memory: +usersPackage.memory + +extra.memory,
-        disk: +usersPackage.disk + +extra.disk,
-        cpu: +usersPackage.cpu + +extra.cpu,
-        servers: +usersPackage.servers + +extra.servers
+        memory: defaultPackage.memory + extra.memory,
+        disk: defaultPackage.disk + extra.disk,
+        cpu: defaultPackage.cpu + extra.cpu,
+        servers: defaultPackage.servers + extra.servers
     }
 
     const user_servers = req.session.data.panelInfo.relationships.servers.data
@@ -35,7 +33,7 @@ const getUserResources = async (req) => {
         memory: 0,
         disk: 0,
         cpu: 0,
-        servers: user_servers.length
+        servers: req.session.data.panelInfo.relationships.servers.data
     }
 
     for (const server of user_servers) {
@@ -45,7 +43,7 @@ const getUserResources = async (req) => {
     }
 
     return {
-        packageInfo: usersPackage,
+        package,
         extra: extra,
         total: total,
         current: current

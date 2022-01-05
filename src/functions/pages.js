@@ -5,17 +5,16 @@ const fs = require('fs');
 const ejs = require('ejs')
 const getUserResources = require("./getUserResources.js")
 
-let theme = yaml.load(fs.readFileSync('./src/settings.yml', 'utf8')).website.theme;
-let pagesFile = yaml.load(fs.readFileSync(`./src/themes/${theme}/pages.yml`, 'utf8'));
+const theme = yaml.load(fs.readFileSync('./src/settings.yml', 'utf8')).website.theme;
+const pagesFile = yaml.load(fs.readFileSync(`./src/themes/${theme}/pages.yml`, 'utf8'));
+const settings = yaml.load(fs.readFileSync('./src/settings.yml', 'utf8'));
 
-const settings = yaml.load(fs.readFileSync('./src/settings.yml', 'utf8'))
-
-let file;
-let type;
+let file, type;
 
 router.get("*", async (req, res) => {
     if (req._parsedUrl.pathname === "/") {
-        file = pagesFile.pages.login.file
+        if (!req.session.data) return res.redirect('/api/login');
+        file = pagesFile.pages.login.file;
     } else if (req._parsedUrl.pathname === "/logout") {
         req.session.destroy()
         return res.redirect("/")
@@ -26,7 +25,7 @@ router.get("*", async (req, res) => {
 
         const exists = pagesFile.pages[pathname];
 
-        if (typeof exists === "undefined") {
+        if (!exists) {
             res.status(404)
             file = pagesFile.pages.error404.file
         } else {
@@ -36,20 +35,20 @@ router.get("*", async (req, res) => {
 
             type = exists.type
 
-            if (permission === 0 || permission === 1 || permission === 2) { // Checks if it is a valid permission number.
+            if ([0, 1, 2].includes(permission)) { // Checks if it is a valid permission number.
                 /*
                 0 = Anyone can view the page.
                 1 = Only users logged in can view the page. 403 if not logged in.
                 2 = Only administrators can view the page. 404 if not an administrator.
                 */
-                if (permission === 1 || permission === 2) {
-                    if (!req.session.data || !req.session.data.userInfo) {
+                if (permission > 0) {
+                    if (!req.session.data?.userInfo) {
                         res.status(403)
                         file = pagesFile.pages.error403.file // The value of "nopermission" on pages.yml is the page to be shown.
                     } else {
                         if (permission === 1) {
                             file = exists.file
-                        } else if (permission === 2) { // Check if the route is administrator only.
+                        } else { // Check if the route is administrator only.
                             if (!req.session.data.panelInfo.root_admin) { // If user isn't an administrator.
                                 res.status(404)
                                 file = pagesFile.pages.error403.file
@@ -110,7 +109,7 @@ router.get("*", async (req, res) => {
     const variables = { // Creates "variables" object for what variables are to be sent frontend.
         variables: req.session.variables || null,
         data: req.session.data || null,
-        settings: settings,
+        settings,
         theme_settings: pagesFile,
         package: packageinfo,
         extra: extra,
