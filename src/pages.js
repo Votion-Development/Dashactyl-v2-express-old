@@ -1,27 +1,24 @@
 const express = require('express');
 const router = express.Router();
 const yaml = require('js-yaml');
-const fs = require('fs');
-const ejs = require('ejs')
-const getUserResources = require("./getUserResources.js")
+const { readFileSync } = require('fs');
+const getUserResources = require("./functions/getUserResources.js")
 
-const theme = yaml.load(fs.readFileSync('./src/settings.yml', 'utf8')).website.theme;
-const pagesFile = yaml.load(fs.readFileSync(`./src/themes/${theme}/pages.yml`, 'utf8'));
-const settings = yaml.load(fs.readFileSync('./src/settings.yml', 'utf8'));
+const theme = yaml.load(readFileSync('./src/settings.yml', 'utf8')).website.theme;
+const pagesFile = yaml.load(readFileSync(`./src/themes/${theme}/pages.yml`, 'utf8'));
+const settings = yaml.load(readFileSync('./src/settings.yml', 'utf8'));
 
 let file, type;
 
 router.get("*", async (req, res) => {
     if (req._parsedUrl.pathname === "/") {
-        if (!req.session.data) return res.redirect('/api/login');
+        if (!req.session.data) return res.redirect('/auth/login');
         file = pagesFile.pages.login.file;
     } else {
         let pathname = req._parsedUrl.pathname.slice(1)
-
         if (pathname.slice(-1) === '/') pathname = pathname.slice(0, -1)
 
         const exists = pagesFile.pages[pathname];
-
         if (!exists) {
             res.status(404)
             file = pagesFile.pages.error404.file
