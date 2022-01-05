@@ -23,7 +23,7 @@ store.on('error', function (error) {
     console.log(error);
 });
 
-app.use(require('express-session')({
+app.use(session({
     secret: settings.website.secret,
     resave: true,
     saveUninitialized: true,
