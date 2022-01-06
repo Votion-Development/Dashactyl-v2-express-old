@@ -39,7 +39,7 @@ router.get('*', async (req, res) => {
             console.log(
                 `[WEB] Path: '${path}' permission value is invalid. `+
                 'Permission must be 0 (everyone), 1 (logged in), or 2 (administrator).'
-            )
+            );
             return res.status(500).send(
                 'An error has occured while attempting to load this page. '+
                 'Please contact an administrator to fix this.'
@@ -58,7 +58,7 @@ router.get('*', async (req, res) => {
         return res
             .status(500)
             .render(pages.error500.file, {
-                error: 'The package assigned to your accounr does not match any packages in the database.',
+                error: 'The package assigned to your account does not match any packages in the database.',
                 serverInvite
             });
     }
