@@ -32,6 +32,13 @@ const db = client.db(settings.database.name);
     }
 })();
 
+async function getAllAccounts() {
+    return await db
+        .collection('users')
+        .find({})
+        .toArray();
+}
+
 async function fetchAccount(id) {
     return await db
         .collection('users')
@@ -145,6 +152,7 @@ async function deletePackage(name) {
 }
 
 module.exports = {
+    getAllAccounts,
     fetchAccount,
     createAccount,
     deleteAccount,
