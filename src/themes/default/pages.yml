@@ -1,6 +1,11 @@
 # Don't touch this unless you know what you are doing.
 
 pages:
+  home:
+    file: home.ejs
+    permission: 0
+    type: ejs
+  
   login:
     file: login.ejs
     permission: 0
