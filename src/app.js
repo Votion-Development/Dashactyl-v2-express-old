@@ -6,7 +6,7 @@ const express = require('express')
 const bodyParser = require('body-parser')
 // const ratelimit = require('express-rate-limit');
 const session = require('express-session');
-const mongoStore = require('connect-mongodb-session')(session);
+const MongoStore = require('connect-mongodb-session')(session);
 const settings = yaml.load(readFileSync('./src/settings.yml', 'utf8'));
 const { website:{ theme }} = yaml.load(readFileSync('./src/settings.yml', 'utf8'));
 
@@ -14,7 +14,7 @@ const app = express();
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, `themes/${theme}/pages`));
 
-const store = new mongoStore({
+const store = new MongoStore({
     uri: settings.database.connectionuri,
     databaseName: settings.database.name,
     collection: 'sessions'
@@ -33,6 +33,7 @@ app.use(session({
     store: store,
 }));
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use((err, _, res, next) => {
     // https://stackoverflow.com/questions/53048642/node-js-handle-body-parser-invalid-json-error
