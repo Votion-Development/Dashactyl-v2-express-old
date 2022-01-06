@@ -55,7 +55,7 @@ app.use((err, _, res, next) => {
 // })
 
 app.use("/auth", require("./auth/callback.js"));
-app.use("/", require("./pages.js"));
+app.use("/", require("./handler"));
 
 app.listen(settings.website.port, () => {
     console.log(`Website listening on port ${settings.website.port}`);
