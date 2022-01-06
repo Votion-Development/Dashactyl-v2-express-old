@@ -8,6 +8,11 @@ const { pages } = util.loadPages(settings.website.theme);
 
 router.get('*', async (req, res) => {
     if (req.url === '/') return res.redirect('/login');
+    if (req.url === '/logout') {
+        if (req.session.data) delete req.session.data;
+        if (req.session.variables) delete req.session.variables;
+        return req.session.destroy(() => res.redirect('/home'));
+    }
 
     const variables = {};
     const path = req.url.slice(1);
