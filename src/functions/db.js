@@ -109,7 +109,7 @@ async function deleteAccount(id) {
 
 async function checkBlacklisted(id) {
     const data = await db
-        .collection('users')
+        .collection('blacklisted')
         .findOne({ discordID: id });
 
     return !!data;
