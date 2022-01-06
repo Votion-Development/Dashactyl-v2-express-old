@@ -1,17 +1,17 @@
-const db = require("./db.js")
+const db = require("./db.js");
 
 const getUserResources = async (req) => {
-    req.session.data.dbinfo = await db.fetchAccount(req.session.data.userInfo.id)
+    req.session.data.db_info = await db.fetchAccount(req.session.data.user_info.id);
 
-    const package = await db.findPackage(req.session.data.dbinfo.package)
+    const package = await db.findPackage(req.session.data.db_info.package)
     if (!package) return `noPackage`;
-    const { dbinfo } = req.session.data;
+    const { db_info } = req.session.data;
 
     const extra = {
-        memory: dbinfo.memory || 0,
-        disk: dbinfo.disk || 0,
-        cpu: dbinfo.cpu || 0,
-        servers: dbinfo.servers || 0
+        memory: db_info.memory || 0,
+        disk: db_info.disk || 0,
+        cpu: db_info.cpu || 0,
+        servers: db_info.servers || 0
     }
 
     const total = {
@@ -25,11 +25,11 @@ const getUserResources = async (req) => {
         memory: 0,
         disk: 0,
         cpu: 0,
-        servers: req.session.data.panelInfo.relationships.servers.data
+        servers: req.session.data.panel_info.relationships.servers.data
     }
 
     return { package, extra, total, current }
 }
 
 
-module.exports = getUserResources
+module.exports = getUserResources;
