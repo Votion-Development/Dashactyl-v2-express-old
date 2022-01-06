@@ -14,12 +14,13 @@ router.get('*', async (req, res) => {
         return req.session.destroy(() => res.redirect('/home'));
     }
 
+    const { query } = req;
     const variables = {};
-    const path = req.url.slice(1);
+    const path = req.url.slice(1).split('?')[0];
     const page = pages[path];
     if (!page) return res.status(404).render(
         pages.error404.file,
-        { data: req.session.data, variables }
+        { data: req.session.data, query, variables }
     );
 
     switch (page.permission) {
@@ -49,7 +50,7 @@ router.get('*', async (req, res) => {
 
     if (page.permission === 0) return res.render(
         page.file,
-        { data: req.session.data, variables }
+        { data: req.session.data, query, variables }
     );
 
     const resources = await getUserResources(req);
