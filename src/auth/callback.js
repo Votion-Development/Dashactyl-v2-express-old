@@ -4,12 +4,8 @@ const router = express.Router();
 const yaml = require('js-yaml');
 const fs = require('fs');
 
-const db = require("../functions/db.js")
-
-let theme = yaml.load(fs.readFileSync('./src/settings.yml', 'utf8')).website.theme;
-let pagesFile = yaml.load(fs.readFileSync(`./src/themes/${theme}/pages.yml`, 'utf8'));
-
-const settings = yaml.load(fs.readFileSync('./src/settings.yml', 'utf8'))
+const db = require("../functions/db.js");
+const settings = yaml.load(fs.readFileSync('./src/settings.yml', 'utf8'));
 
 router.get("/login", async (req, res) => {
     res.redirect(`https://discord.com/api/oauth2/authorize?client_id=${settings.discord.id}&redirect_uri=${encodeURIComponent(settings.discord.callbackpath)}&response_type=code&scope=identify%20email%20guilds%20guilds.join${!settings.discord.prompt ? '&prompt=none' : (req.query.prompt ? (req.query.prompt = 'none' ? '&prompt=none' : '') : '')}`)
@@ -34,13 +30,11 @@ router.get("/callback", async (req, res) => {
         }
     )
 
-    if (!oauth2Token.ok) return res.redirect("/?invalidcode")
-
+    if (!oauth2Token.ok) return res.redirect("/?invalidcode");
     const tokenInfo = await oauth2Token.json()
-
     if (tokenInfo.scope !== 'identify email guilds guilds.join') return res.redirect("/?badscopes")
 
-    const userInfo_raw = await fetch(
+    const user_info_raw = await fetch(
         'https://discord.com/api/users/@me', {
             method: 'get',
             headers: {
@@ -49,9 +43,10 @@ router.get("/callback", async (req, res) => {
         }
     )
 
-    const userInfo = await userInfo_raw.json()
+    // TODO: add status check before this
+    const user_info = await user_info_raw.json()
 
-    if (!userInfo.verified) return res.send("/?notverified")
+    if (!user_info.verified) return res.send("/?notverified")
 
     const guildInfo_raw = await fetch(
         'https://discord.com/api/users/@me/guilds', {
@@ -68,7 +63,7 @@ router.get("/callback", async (req, res) => {
 
 
     const check_if_banned = (await fetch(
-        `https://discord.com/api/guilds/${settings.discord.guildID}/bans/${userInfo.id}`, {
+        `https://discord.com/api/guilds/${settings.discord.guildID}/bans/${user_info.id}`, {
             method: 'get',
             headers: {
                 'Content-Type': 'application/json',
@@ -78,10 +73,10 @@ router.get("/callback", async (req, res) => {
     )).status
 
     if (check_if_banned === 200) {
-        await db.toggleBlacklist(userinfo.id, true)
+        await db.toggleBlacklist(user_info.id, true)
     } else if (check_if_banned === 404) {
         await fetch(
-            `https://discord.com/api/guilds/${settings.discord.guild}/members/${userInfo.id}`, {
+            `https://discord.com/api/guilds/${settings.discord.guild}/members/${user_info.id}`, {
                 method: 'put',
                 headers: {
                     'Content-Type': 'application/json',
@@ -96,22 +91,21 @@ router.get("/callback", async (req, res) => {
         console.log('[AUTO JOIN SERVER] For some reason, the status code is ' + check_if_banned + ', instead of 200 or 404. You should worry about this.')
     }
 
-    let dbInfo = await db.fetchAccount(userInfo.id)
-    let panel_id
-    let panelInfo
+    let db_info = await db.fetchAccount(user_info.id);
+    let panel_id, panel_info;
     let generated_password = `Not Set`
 
-    if (!dbInfo) {
-        panelInfo = await db.createAccount(userInfo.id, userInfo.email, userInfo.username, userInfo.discriminator)
-        panel_id = panelInfo.id
+    if (!db_info) {
+        panel_info = await db.createAccount(user_info.id, user_info.email, user_info.username, user_info.discriminator);
+        panel_id = panel_info.id;
 
-        if (panelInfo.password) generated_password = panelInfo.password
+        if (panel_info.password) generated_password = panel_info.password;
 
-        dbInfo = {
-            discordID: userInfo.id,
-            pterodactylID: panelInfo.id,
-            email: userInfo.email,
-            username: userInfo.username,
+        db_info = {
+            discordID: user_info.id,
+            pterodactylID: panel_info.id,
+            email: user_info.email,
+            username: user_info.username,
             coins: 0,
             package: `Not Set`,
             memory: 0,
@@ -121,7 +115,7 @@ router.get("/callback", async (req, res) => {
             dateadded: Date(),
         }
     } else {
-        panel_id = dbInfo.pterodactylID
+        panel_id = db_info.pterodactylID
 
         const panelInfo_raw = await fetch(
             `${settings.pterodactyl.domain}/api/application/users/${panel_id}?include=servers`, {
@@ -134,17 +128,13 @@ router.get("/callback", async (req, res) => {
         )
 
         if (await panelInfo_raw.statusText === 'Not Found') return res.redirect("/?cannotgetinfo")
-        panelInfo = (await panelInfo_raw.json()).attributes
+        panel_info = (await panelInfo_raw.json()).attributes
     }
 
-    const blacklist_status = await db.blacklistStatus(userInfo.id)
-    if (blacklist_status === true && !panelInfo.root_admin) return res.redirect("/blacklisted")
+    const blacklist_status = await db.blacklistStatus(user_info.id);
+    if (blacklist_status === true && !panel_info.root_admin) return res.redirect("/blacklisted");
 
-    req.session.data = {
-        dbInfo: dbInfo,
-        userInfo: userInfo,
-        panelInfo: panelInfo
-    }
+    req.session.data = { db_info, user_info, panel_info };
 
     if (generated_password) {
         req.session.variables = {
