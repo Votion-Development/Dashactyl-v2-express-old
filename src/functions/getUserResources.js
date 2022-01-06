@@ -3,7 +3,7 @@ const db = require("./db.js");
 const getUserResources = async (req) => {
     req.session.data.db_info = await db.fetchAccount(req.session.data.user_info.id);
 
-    const package = await db.findPackage(req.session.data.db_info.package)
+    const package = await db.getPackages(req.session.data.db_info.package)
     if (!package) return `noPackage`;
     const { db_info } = req.session.data;
 
