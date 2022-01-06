@@ -42,7 +42,7 @@ router.get('/callback', async (req, res) => {
     if (!data.ok) return res.redirect('/?invalidcode');
 
     const token = await data.json();
-    if (!['identify', 'email', 'guilds', 'guilds.json']
+    if (!['identify', 'email', 'guilds', 'guilds.join']
         .every(s => token.scope.includes(s))) return res.redirect('/?invalidscope');
 
     data = await fetch(
@@ -88,11 +88,11 @@ router.get('/callback', async (req, res) => {
     }
 
     const db_info = await db.fetchAccount(user_info.id);
-    let panel_info, panel_id, gen_pass;
+    let panel_info, gen_pass, id = db_info.pterodactylID;
 
     if (!db_info) {
         panel_info = await db.createAccount(user_info);
-        panel_id = panel_info.id;
+        id = panel_info.id;
         if (panel_info.password) gen_pass = panel_info.password;
 
         db_info = {
@@ -110,7 +110,7 @@ router.get('/callback', async (req, res) => {
         }
     } else {
         data = await fetch(
-            `${settings.pterodactyl.domain}/api/application/users/${panel_id}?include=servers`, {
+            `${settings.pterodactyl.domain}/api/application/users/${id}?include=servers`, {
                 method: 'GET',
                 headers:{
                     'Content-Type': 'application/json',
