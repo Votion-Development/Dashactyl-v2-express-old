@@ -12,6 +12,7 @@ Website: https://votion.dev
 
 Need to install Dashactyl? Need a place to find themes? Need support?
 
+Installation: https://docs.votion.dev/docs/Dashactyl/installation
 Check out our Discord server! https://discord.gg/uSQBWP9fMR
 
 # Disclaimer
