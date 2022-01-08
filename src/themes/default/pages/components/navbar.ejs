@@ -4,13 +4,13 @@
       <% if(data) { %>
       <div class="flex md:order-2">
         <body>
-          <button id="dropdownInformationButton" data-dropdown-toggle="dropdownInformation" class="text-white font-medium rounded-lg text-sm px-4 py-2.5 text-center inline-flex items-center" type="button"><img class="inline-block h-7 w-7 rounded-full" src="https://cdn.discordapp.com/avatars/<%= data.userInfo.id %>/<%= data.userInfo.avatar %>.webp"></button>
+          <button id="dropdownInformationButton" data-dropdown-toggle="dropdownInformation" class="text-white font-medium rounded-lg text-sm px-4 py-2.5 text-center inline-flex items-center" type="button"><img class="inline-block h-7 w-7 rounded-full" src="https://cdn.discordapp.com/avatars/<%= data.user_info.id %>/<%= data.user_info.avatar %>.webp"></button>
           <!-- Dropdown menu -->
           <div id="dropdownInformation" class="hidden z-10 w-44 text-base list-none bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700 dark:divide-gray-600">
             <div class="py-3 px-4 text-gray-900 dark:text-white">
-              <span class="block text-sm font-medium"><%= data.userInfo.username %></span>
-              <span class="block text-sm truncat"><%= data.dbInfo.coins %> coins</span>
-              <span class="block text-sm truncat">Package: <%= data.dbInfo.package %></span>
+              <span class="block text-sm font-medium"><%= data.user_info.username %></span>
+              <span class="block text-sm truncat"><%= data.db_info.coins %> coins</span>
+              <span class="block text-sm truncat">Package: <%= data.db_info.package %></span>
             </div>
             <ul class="py-1" aria-labelledby="dropdownInformationButton">
               <li>
@@ -37,7 +37,7 @@
               </li>
             </ul>
             <div class="py-1">
-              <a href="/accounts/logout" class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"><i class="fa-solid fa-door-open"></i>&nbsp;Logout</a>
+              <a href="/logout" class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"><i class="fa-solid fa-door-open"></i>&nbsp;Logout</a>
             </div>
           </div>
           <script src="https://unpkg.com/@themesberg/flowbite@1.2.0/dist/flowbite.bundle.js"></script>
@@ -57,7 +57,7 @@
           <li>
             <a href="/earn/afk" class="block py-2 pr-4 pl-3 text-gray-700 border-b border-gray-100 hover:bg-gray-50 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 md:dark:hover:text-white dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"><i class="fa-solid fa-coins"></i>&nbsp;AFK</a>
           </li>
-          <% if(data.panelInfo.root_admin == true) { %>
+          <% if(data.panel_info.root_admin == true) { %>
           <li>
             <a href="/admin" class="block py-2 pr-4 pl-3 text-gray-700 border-b border-gray-100 hover:bg-gray-50 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 md:dark:hover:text-white dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"><i class="fa-solid fa-user-gear"></i>&nbsp;Admin</a>
           </li>

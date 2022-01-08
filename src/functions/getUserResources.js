@@ -1,23 +1,17 @@
-const db = require("./db.js")
+const db = require("./db.js");
 
 const getUserResources = async (req) => {
-    req.session.data.dbInfo = await db.fetchAccount(req.session.data.userInfo.id);
-    if (!req.session.data.dbInfo.package) {
-        req.session.data.dbInfo.package = await db.getDefaultPackage()
+    req.session.data.db_info = await db.fetchAccount(req.session.data.user_info.id);
 
-        await req.session.save()
-    }
-
-    const { package } = req.session.data.dbInfo;
-    const defaultPackage = await db.findPackage(package);
-    if (package != defaultPackage?.name) return `noPackage`;
-    const { dbInfo } = req.session.data;
+    const package = await db.getPackages(req.session.data.db_info.package)
+    if (!package) return `noPackage`;
+    const { db_info } = req.session.data;
 
     const extra = {
-        memory: dbInfo.memory || 0,
-        disk: dbInfo.disk || 0,
-        cpu: dbInfo.cpu || 0,
-        servers: dbInfo.servers || 0
+        memory: db_info.memory || 0,
+        disk: db_info.disk || 0,
+        cpu: db_info.cpu || 0,
+        servers: db_info.servers || 0
     }
 
     const total = {
@@ -33,22 +27,11 @@ const getUserResources = async (req) => {
         memory: 0,
         disk: 0,
         cpu: 0,
-        servers: req.session.data.panelInfo.relationships.servers.data
+        servers: req.session.data.panel_info.relationships.servers.data
     }
 
-    for (const server of user_servers) {
-        current.memory += server.attributes.limits.memory
-        current.disk += server.attributes.limits.disk
-        current.cpu += server.attributes.limits.cpu
-    }
-
-    return {
-        package,
-        extra: extra,
-        total: total,
-        current: current
-    }
+    return { package, extra, total, current }
 }
 
 
-module.exports = getUserResources
+module.exports = getUserResources;

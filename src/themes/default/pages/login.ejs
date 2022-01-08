@@ -8,18 +8,32 @@
       <h1 class="title-font font-medium text-3xl text-gray-900 dark:text-white">Dashactyl</h1>
       <p class="leading-relaxed mt-4">An awesome client panel for Pterodactyl.</p>
     </div>
-    <% if(data) { %>
+    <% if(data?.user_info) { %>
     <div class="lg:w-2/6 md:w-1/2 bg-gray-100 rounded-lg p-8 flex flex-col md:ml-auto w-full mt-10 md:mt-0 dark:bg-gray-800 dark:bg-opacity-50">
       <h2 class="text-gray-900 text-lg font-medium title-font mb-5 dark:text-white">Continue as</h2>
       <div class="flex space-x-4">
-        <button onclick="window.location.href = '/dashboard'" class="flex-auto text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg"><img class="inline-block h-7 w-7 rounded-full" src="https://cdn.discordapp.com/avatars/<%= data.userInfo.id %>/<%= data.userInfo.avatar %>.webp">&nbsp; <%= data.userInfo.username %></button>
+        <button onclick="window.location.href = '/dashboard'" class="flex-auto text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg"><img class="inline-block h-7 w-7 rounded-full" src="https://cdn.discordapp.com/avatars/<%= data.user_info.id %>/<%= data.user_info.avatar %>.webp">&nbsp; <%= data.user_info.username %></button>
         <button onclick="window.location.href = '/dashboard'" class="flex-auto text-black dark:text-white bg-white dark:bg-gray-900 border-0 py-2 px-8 focus:outline-none hover:bg-gray-50 dark:hover:bg-gray-800 rounded text-lg"><i class="fa-solid fa-door-open"></i>&nbsp;Logout</button>
       </div>
     </div>
+    <% } else if (query?.type) { %>
+      <% if (query?.type === 'email') { %>
+        <div class="lg:w-2/6 md:w-1/2 bg-gray-100 rounded-lg p-8 flex flex-col md:ml-auto w-full mt-10 md:mt-0 dark:bg-gray-800 dark:bg-opacity-50">
+          <h2 class="text-gray-900 text-lg font-medium title-font mb-5 dark:text-white">Login with Email</h2>
+          <form name="login-email" method="post" action="/auth/login">
+            <tr><td class="text-gray-900 text-lg font-medium dark:text-white my-4">Email</td><br><td><input name="email" type="text" class="rounded text-black font-medium" /></td></tr><br><br>
+            <tr><td class="text-gray-900 text-lg font-medium dark:text-white my-4">Password</td><br><td><input name="password" type="password" class="rounded text-black font-medium" /></td></tr><br>
+            <tr><td><input value="Login" type="submit" class="flex-auto text-white bg-indigo-500 py-2 px-4 mt-4 rounded text-lg hover:bg-indigo-600" /></td></tr>
+          </form>
+        </div>
+      <% } else { %>
+        <h2 class="text-gray-900 text-lg font-medium title-font mb-5 dark:text-white">Unsupported Login Type</h2>
+      <% } %>
     <% } else { %>
     <div class="lg:w-2/6 md:w-1/2 bg-gray-100 rounded-lg p-8 flex flex-col md:ml-auto w-full mt-10 md:mt-0 dark:bg-gray-800 dark:bg-opacity-50">
       <h2 class="text-gray-900 text-lg font-medium title-font mb-5 dark:text-white">Login with</h2>
-      <button onclick="window.location.href = '/api/login'" class="text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg"><i class="fa-brands fa-discord"></i>&nbsp; Discord</button>
+      <button onclick="window.location.href = '/login?type=email'" class="text-white bg-indigo-500 border-0 my-2 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg"><i class="fa-brands fa-discord"></i>&nbsp; Email</button>
+      <button onclick="window.location.href = '/auth/login'" class="text-white bg-indigo-500 border-0 my-2 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg"><i class="fa-brands fa-discord"></i>&nbsp; Discord</button>
     </div>
     <% } %>
   </div>
