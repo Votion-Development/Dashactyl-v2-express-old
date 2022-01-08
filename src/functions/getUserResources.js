@@ -3,8 +3,9 @@ const db = require("./db.js");
 const getUserResources = async (req) => {
     req.session.data.db_info = await db.fetchAccount(req.session.data.user_info.id);
 
-    const package = await db.getPackages(req.session.data.db_info.package)
-    if (!package) return `noPackage`;
+    let package = await db.getPackages(req.session.data.db_info.package)[0];
+    package ??= await db.getPackages('default');
+    if (!package) return `noPackages`;
     const { db_info } = req.session.data;
 
     const extra = {
@@ -15,19 +16,17 @@ const getUserResources = async (req) => {
     }
 
     const total = {
-        memory: defaultPackage.memory + extra.memory,
-        disk: defaultPackage.disk + extra.disk,
-        cpu: defaultPackage.cpu + extra.cpu,
-        servers: defaultPackage.servers + extra.servers
+        memory: +package.memory + +extra.memory,
+        disk: +package.disk + +extra.disk,
+        cpu: +package.cpu + +extra.cpu,
+        servers: +package.servers + +extra.servers
     }
-
-    const user_servers = req.session.data.panelInfo.relationships.servers.data
 
     const current = {
         memory: 0,
         disk: 0,
         cpu: 0,
-        servers: req.session.data.panel_info.relationships.servers.data
+        servers: req.session.data.panel_info.relationships.servers.data.length
     }
 
     return { package, extra, total, current }

@@ -13,7 +13,7 @@
       <h2 class="text-gray-900 text-lg font-medium title-font mb-5 dark:text-white">Continue as</h2>
       <div class="flex space-x-4">
         <button onclick="window.location.href = '/dashboard'" class="flex-auto text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg"><img class="inline-block h-7 w-7 rounded-full" src="https://cdn.discordapp.com/avatars/<%= data.user_info.id %>/<%= data.user_info.avatar %>.webp">&nbsp; <%= data.user_info.username %></button>
-        <button onclick="window.location.href = '/dashboard'" class="flex-auto text-black dark:text-white bg-white dark:bg-gray-900 border-0 py-2 px-8 focus:outline-none hover:bg-gray-50 dark:hover:bg-gray-800 rounded text-lg"><i class="fa-solid fa-door-open"></i>&nbsp;Logout</button>
+        <button onclick="window.location.href = '/logout'" class="flex-auto text-black dark:text-white bg-white dark:bg-gray-900 border-0 py-2 px-8 focus:outline-none hover:bg-gray-50 dark:hover:bg-gray-800 rounded text-lg"><i class="fa-solid fa-door-open"></i>&nbsp;Logout</button>
       </div>
     </div>
     <% } else if (query?.type) { %>

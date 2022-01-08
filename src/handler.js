@@ -32,10 +32,13 @@ router.get('*', async (req, res) => {
         case 2:{
             if (!req.session.data?.panel_info) return res.redirect('/login');
             if (!req.session.data.panel_info.root_admin) {
-                return res.status(403).render(pages.error403.file);
+                return res.status(403).render(
+                    pages.error403.file,
+                    { data: req.session.data, query, variables }
+                );
             }
             break;
-        }
+        } 
         default:{
             console.log(
                 `[WEB] Path: '${path}' permission value is invalid. `+
@@ -71,8 +74,18 @@ router.get('*', async (req, res) => {
     if (!resources) {
         variables.packageInfo = 0;
         variables.current = 0;
-        variables.extra = 0;
-        variables.total = 0;
+        variables.extra = {
+            memory: 0,
+            disk: 0,
+            cpu: 0,
+            servers: 0
+        }
+        variables.total = {
+            memory: 0,
+            disk: 0,
+            cpu: 0,
+            servers: 0
+        }
     } else {
         Object.assign(variables, resources);
     }
