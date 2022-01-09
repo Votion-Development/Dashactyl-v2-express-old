@@ -6,6 +6,13 @@ const router = Router();
 const settings = util.loadSettings();
 const { pages } = util.loadPages(settings.website.theme);
 
+const DEFAULT_SPECS = {
+    memory: 0,
+    disk: 0,
+    cpu: 0,
+    servers: 0
+}
+
 router.get('*', async (req, res) => {
     if (req.url === '/') return res.redirect('/login');
     if (req.url === '/logout') {
@@ -73,19 +80,9 @@ router.get('*', async (req, res) => {
 
     if (!resources) {
         variables.packageInfo = 0;
-        variables.current = 0;
-        variables.extra = {
-            memory: 0,
-            disk: 0,
-            cpu: 0,
-            servers: 0
-        }
-        variables.total = {
-            memory: 0,
-            disk: 0,
-            cpu: 0,
-            servers: 0
-        }
+        variables.current = DEFAULT_SPECS;
+        variables.extra = DEFAULT_SPECS;
+        variables.total = DEFAULT_SPECS;
     } else {
         Object.assign(variables, resources);
     }
