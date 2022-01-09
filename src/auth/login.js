@@ -86,8 +86,9 @@ router.get('/callback', async (req, res) => {
             console.log(`[AUTO-JOIN] Received status code '${data.status}' for ban status.`);
         }
     }
-
-    const db_info = await db.fetchAccount(user_info.id);
+    
+    let db_info = await db.fetchAccount(user_info.id);
+    db_info ??= await db.createAccount(user_info);
     let panel_info, gen_pass, id = db_info.pterodactylID;
 
     if (!db_info) {

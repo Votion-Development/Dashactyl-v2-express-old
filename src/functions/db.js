@@ -3,29 +3,71 @@ const { MongoClient } = require('mongodb');
 const util = require('../util');
 
 const settings = util.loadSettings();
-const client = new MongoClient(settings.database.connection_uri);
+const client = new MongoClient(settings.database.connectionuri);
 const db = client.db(settings.database.name);
 
 (async () => {
     await client.connect();
     console.log('Connected to the database.');
 
-    const DATABASES = [
+    const COLLECTIONS = [
         'users', 'sessions', 'coupons',
         'renewal_timer', 'blacklisted',
-        'packages'
+        'packages', 'eggs'
     ];
 
-    for (const coll of DATABASES) {
+    for (const coll of COLLECTIONS) {
         db.listCollections({ name: coll })
-            .next((_, data) => {
+            .next((_, data) => {    
                 if (!data) {
-                    db.createCollection(coll, (err, _) => {
+                    db.createCollection(coll, async (err, doc) => {
                         if (err) console.log(
                             `There was an error creating the '${coll}' collection in the database. `+
                             'Please make sure that the connection URI is correct and that the user '+
                             'has the correct permissions to create collections.'
-                        );
+                        ); 
+                        if (coll === `packages`) {
+                            await doc.insertOne({
+                                name: `Default Package`,
+                                memory: `1024`,
+                                disk: `1024`,
+                                cpu: `100`,
+                                servers: `1`,
+                                default: true,
+                                dateadded: Date()
+                            });
+                        } else if (coll === `eggs`) {
+                            await doc.insertOne({
+                                name: `Default Egg`,
+                                display: `Default Egg`,
+                                minimum:{
+                                    memory: 100,
+                                    disk: 100,
+                                    cpu: 10
+                                },
+                                maximum:{
+                                    memory: null,
+                                    disk: null,
+                                    cpu: null
+                                },
+                                info:{
+                                    egg: 3,
+                                    docker_image: 'quay.io/pterodactyl/core:java',
+                                    startup: 'java -Xms128M -Xmx{{SERVER_MEMORY}}M -Dterminal.jline=false -Dterminal.ansi=true -jar {{SERVER_JARFILE}}',
+                                    environment:{
+                                        SERVER_JARFILE: 'server.jar',
+                                        BUILD_NUMBER: 'latest'
+                                    },
+                                    feature_limits:{
+                                        databases: 1,
+                                        backups: 1
+                                    }
+                                },
+                                default: true,
+                                dateadded: Date()
+                            });
+                        }
+                        !err && !console.log(`Created the '${coll}' collection.`);
                     });
                 }
             });
@@ -46,6 +88,7 @@ async function fetchAccount(id) {
 }
 
 async function createAccount(data) {
+    console.log(data);
     const collection = db.collection('users');
     const user = await collection.findOne({ discordID: data.id });
     if (user) return;
@@ -78,8 +121,8 @@ async function createAccount(data) {
     if (res.status === 201) {
         const json = (await res.json()).attributes;
         await collection.insertOne({
-            discordID: id,
-            pterodactylID: json.password,
+            discordID: data.id,
+            pterodactylID: json.id,
             coins: 0,
             package: 'default',
             memory: 0,

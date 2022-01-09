@@ -15,7 +15,7 @@ pages:
     file: dashboard.ejs
     permission: 1
     type: ejs
-  
+
   servers/new:
     file: create_server.ejs
     permission: 1
@@ -34,4 +34,9 @@ pages:
   error500:
     file: 500.ejs
     permission: 0
+    type: ejs
+
+  admin:
+    file: admin.ejs
+    permission: 2
     type: ejs

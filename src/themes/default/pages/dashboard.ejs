@@ -100,7 +100,7 @@
                                             </td>
                                             <td class="py-4 px-6 text-sm text-gray-500 whitespace-nowrap dark:text-white">
                                                 <%= server.attributes.limits.disk %>MB
-                                            </td>
+                                            </td> 
                                             <td class="py-4 px-6 text-sm text-gray-500 whitespace-nowrap dark:text-white">
                                                 <% if (Object.entries(settings.eggs).filter(egg => server.attributes.egg == egg[1].info.egg).length == 1) { %>
                                                     <% if (timers[server.attributes.id] && timers[server.attributes.id].action !== "???") { %>
