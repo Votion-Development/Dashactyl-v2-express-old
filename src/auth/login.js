@@ -19,15 +19,6 @@ router.get('/login', (req, res) => {
     );
 });
 
-router.post('/login', async (req, res) => {
-    if (!req.body.email || !req.body.password) return res.redirect('/login?err=missingfield');
-    const { email, password } = req.body;
-    const user = (await db.getAllAccounts()).find(a => a.email.toLowerCase() === email.toLowerCase());
-    if (!user) return res.redirect('/login?err=notfound');
-    console.log(email, password);
-    console.log(user);
-});
-
 router.get('/callback', async (req, res) => {
     if (req.query.error && req.query.error_description) {
         if (req.query.error === 'access_denied') return res.send("Cancelled Login Action");
