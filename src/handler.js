@@ -5,6 +5,7 @@ const getUserResources = require('./functions/getUserResources');
 const router = Router();
 const settings = util.loadSettings();
 const { pages } = util.loadPages(settings.website.theme);
+const serverInvite = settings.discord.invite || 'notSet';
 
 const DEFAULT_SPECS = {
     memory: 0,
@@ -65,7 +66,6 @@ router.get('*', async (req, res) => {
 
     const resources = await getUserResources(req);
     if (resources === 'noPackage') {
-        const serverInvite = settings.discord.invite || 'notSet';
         return res
             .status(500)
             .render(pages.error500.file, {
@@ -89,7 +89,18 @@ router.get('*', async (req, res) => {
     variables.timers = {};
 
     if (req.session.variables) delete req.session.variables;
-    res.render(page.file, variables);
+
+    res.render(page.file, variables, (err, out) => {
+        if (!err) return res.send(out);
+
+        const message = err.message.split('\n').pop();
+        return res
+            .status(500)
+            .render(pages.error500.file, {
+                error: message,
+                serverInvite
+            });
+    });
 });
 
 module.exports = router;
