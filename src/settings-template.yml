@@ -7,7 +7,7 @@ website:
 discord:
   id: ""
   secret: ""
-  callbackpath: "http://localhost:3000/api/callback"
+  callbackpath: "http://localhost:3000/auth/callback"
   prompt: false
 
   token: ""
@@ -19,5 +19,5 @@ pterodactyl:
   generate_password_on_sign_up: true
 
 database:
-  connectionuri: 
+  connectionuri:
   name: dashactyl
