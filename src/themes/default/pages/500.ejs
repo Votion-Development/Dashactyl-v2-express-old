@@ -4,7 +4,7 @@
           <div class="container px-5 py-12 mx-auto flex flex-wrap items-center">
             <div class="lg:w-3/6 md:w-1/2 bg-gray-100 dark:bg-gray-800 dark:bg-opacity-50 rounded-lg p-8 flex flex-col md:mx-auto w-full mt-10 md:mt-0">
               <% if (!error) { %>
-                <h1 class="text-gray-900 dark:text-white text-lg text-3xl font-medium title-font mb-5 text-center">Error 500 | An unspecified erorr has occured. Please contact a site administrator to fix this.</h1>
+                <h1 class="text-gray-900 dark:text-white text-lg text-3xl font-medium title-font mb-5 text-center">Error 500 | An unknown internal error has occured. Please contact a site administrator to fix this.</h1>
                 <button onclick="window.location.href = '/dashboard'" class="text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg">Return to Dashboard</button>
                 <% } else { %>
                   <% if(serverInvite === "notSet") { %>
