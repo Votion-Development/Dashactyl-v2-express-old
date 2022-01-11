@@ -36,15 +36,6 @@ app.use(
     store: store,
   })
 );
-app.use(
-  express.json({
-    inflate: true,
-    limit: "500kb",
-    reviver: null,
-    strict: true,
-    verify: undefined,
-  })
-);
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
