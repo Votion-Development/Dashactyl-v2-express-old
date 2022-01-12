@@ -88,10 +88,9 @@ async function fetchAccount(id) {
 }
 
 async function createAccount(data) {
-    console.log(data);
     const collection = db.collection('users');
     const user = await collection.findOne({ discordID: data.id });
-    if (user) return;
+    if (user) return user;
 
     let password;
     if (settings.pterodactyl.generate_password_on_signup) {
@@ -123,6 +122,7 @@ async function createAccount(data) {
         await collection.insertOne({
             discordID: data.id,
             pterodactylID: json.id,
+            password,
             coins: 0,
             package: 'default',
             memory: 0,
@@ -132,7 +132,7 @@ async function createAccount(data) {
             dateAdded: Date.now()
         });
 
-        json.password &&= password;
+        json.password ||= password;
         json.relationships = {
             servers:{
                 object: 'list',

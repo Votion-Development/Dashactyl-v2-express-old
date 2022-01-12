@@ -19,10 +19,6 @@ router.get('/login', (req, res) => {
     );
 });
 
-router.post('/login', async (req, res) => {
-    console.log(req);
-});
-
 router.get('/callback', async (req, res) => {
     if (req.query.error && req.query.error_description) {
         if (req.query.error === 'access_denied') return res.send("Cancelled Login Action");
@@ -86,48 +82,26 @@ router.get('/callback', async (req, res) => {
             console.log(`[AUTO-JOIN] Received status code '${data.status}' for ban status.`);
         }
     }
-    
+
     let db_info = await db.fetchAccount(user_info.id);
-    db_info ??= await db.createAccount(user_info);
-    let panel_info, gen_pass, id = db_info.pterodactylID;
+    db_info ||= await db.createAccount(user_info);
 
-    if (!db_info) {
-        panel_info = await db.createAccount(user_info);
-        id = panel_info.id;
-        if (panel_info.password) gen_pass = panel_info.password;
-
-        db_info = {
-            discordID: user_info.id,
-            pterodactylID: panel_info.id,
-            email: user_info.email,
-            username: user_info.username,
-            package: 'default',
-            coins: 0,
-            memory: 0,
-            disk: 0,
-            cpu: 0,
-            servers: 0,
-            dateAdded: Date.now()
-        }
-    } else {
-        data = await fetch(
-            `${settings.pterodactyl.domain}/api/application/users/${id}?include=servers`, {
-                method: 'GET',
-                headers:{
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${settings.pterodactyl.key}`
-                }
+    data = await fetch(
+        `${settings.pterodactyl.domain}/api/application/users/${db_info.pterodactylID}?include=servers`, {
+            method: 'GET',
+            headers:{
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${settings.pterodactyl.key}`
             }
-        );
-        if (!data.ok) return res.redirect('/?cannotgetinfo');
-        panel_info = (await data.json()).attributes;
-    }
+        }
+    );
+    if (!data.ok) return res.redirect('/?cannotgetinfo');
+    const panel_info = (await data.json()).attributes;
 
     const blacklisted = await db.checkBlacklisted(user_info.id);
     if (blacklisted && !panel_info.root_admin) return res.redirect('/?blacklisted');
 
     req.session.data = { user_info, db_info, panel_info };
-    if (gen_pass) req.session.variables = { password: gen_pass };
     req.session.save();
     res.redirect('/dashboard');
 });

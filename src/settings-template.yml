@@ -7,7 +7,7 @@ website:
 discord:
   id: ""
   secret: ""
-  callbackpath: "http://localhost:3000/api/callback"
+  callbackpath: "http://localhost:3000/auth/callback"
   prompt: false
 
   token: ""
@@ -16,7 +16,7 @@ discord:
 pterodactyl:
   domain: ""
   key: "" # Make sure to higher/remove rate limits for application API keys, so the dashboard doesn't get rate limited.
-  generate_password_on_sign_up: true
+  generate_password_on_signup: true
 
 database:
   connectionuri: 

@@ -1,22 +1,20 @@
-<html class="bg-white dark:bg-gray-900">
-    <%- include('./components/head') %>
-        <section class="text-gray-600 bg-white dark:text-gray-400 dark:bg-gray-900 body-font min-h-screen">
-          <div class="container px-5 py-12 mx-auto flex flex-wrap items-center">
-            <div class="lg:w-3/6 md:w-1/2 bg-gray-100 dark:bg-gray-800 dark:bg-opacity-50 rounded-lg p-8 flex flex-col md:mx-auto w-full mt-10 md:mt-0">
-              <% if (!error) { %>
-                <h1 class="text-gray-900 dark:text-white text-lg text-3xl font-medium title-font mb-5 text-center">Error 500 | An unspecified erorr has occured. Please contact a site administrator to fix this.</h1>
-                <button onclick="window.location.href = '/dashboard'" class="text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg">Return to Dashboard</button>
-                <% } else { %>
-                  <% if(serverInvite === "notSet") { %>
-                    <h1 class="text-gray-900 dark:text-white text-lg text-3xl font-medium title-font mb-5 text-center">Error 500 | <%= error %></h1>
-                    <button class="text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg">Discord server invite link not set.</button>
-                  <% } else { %>
-                    <h1 class="text-gray-900 dark:text-white text-lg text-3xl font-medium title-font mb-5 text-center">Error 500 | <%= error %></h1>
-                    <button onclick="window.location.href = '<%= serverInvite %>'" class="text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg">Contact Server Administrators</button>
-                  <% } %>
-              <% } %>
-            </div>
-          </div>
-      </section>
-    <%- include('./components/footer') %>
+<%- include('./components/head') %>
+  <title>Server Error | Dashactyl</title>
+  <html class="bg-white dark:bg-gray-900">
+    <section class="text-gray-600 bg-white dark:text-gray-400 dark:bg-gray-900 body-font min-h-screen">
+      <div class="container px-5 py-12 mx-auto flex flex-wrap items-center">
+        <div class="lg:w-3/6 md:w-1/2 bg-gray-100 dark:bg-gray-800 dark:bg-opacity-50 rounded-lg p-8 flex flex-col md:mx-auto w-full mt-10 md:mt-0">
+          <h1 class="text-gray-900 dark:text-white text-lg text-3xl font-medium title-font mb-5 text-center">Error 500 | An unknown internal error has occured. Please contact a site administrator to fix this.</h1>
+          <% if (error) { %>
+            <p class="leading-relaxed mt-4 text-center">Message: <%= error %></p><br>
+          <% } %>
+          <% if (serverInvite !== "notSet") { %>
+            <button onclick="window.location.href = '<%= serverInvite %>'" class="text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg">Contact Administrators</button>
+            <br>
+          <% } %>
+          <button onclick="window.location.href = '/dashboard'" class="text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg">Return to Dashboard</button>
+        </div>
+      </div>
+    </section>
 </html>
+<%- include('./components/footer') %>
