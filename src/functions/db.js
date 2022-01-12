@@ -156,15 +156,12 @@ async function createAccount(data) {
       }
     );
 
-    const accountlist = await accountlistjson.json();
-    const user = accountlist.data.filter(
-      (acc) => acc.attributes.email === data.email
-    );
-
-    if (user.length === 1) {
+    if (res.status === 201) {
+      const json = (await res.json()).attributes;
       await collection.insertOne({
         discordID: data.id,
-        pterodactylID: user[0].attributes.id,
+        pterodactylID: json.id,
+        password,
         coins: 0,
         package: "default",
         memory: 0,
@@ -173,6 +170,14 @@ async function createAccount(data) {
         servers: 0,
         dateAdded: Date.now(),
       });
+
+      json.password ||= password;
+      json.relationships = {
+        servers: {
+          object: "list",
+          data: [],
+        },
+      };
 
       return user[0].attributes;
     }

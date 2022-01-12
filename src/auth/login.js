@@ -23,10 +23,6 @@ router.get("/login", (req, res) => {
   );
 });
 
-router.post("/login", async (req, res) => {
-  console.log(req);
-});
-
 router.get("/callback", async (req, res) => {
   if (req.query.error && req.query.error_description) {
     if (req.query.error === "access_denied")
@@ -140,7 +136,6 @@ router.get("/callback", async (req, res) => {
     return res.redirect("/?blacklisted");
 
   req.session.data = { user_info, db_info, panel_info };
-  if (gen_pass) req.session.variables = { password: gen_pass };
   req.session.save();
   res.redirect("/dashboard");
 });

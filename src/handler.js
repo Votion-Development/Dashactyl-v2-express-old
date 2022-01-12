@@ -5,6 +5,14 @@ const getUserResources = require("./functions/getUserResources");
 const router = Router();
 const settings = util.loadSettings();
 const { pages } = util.loadPages(settings.website.theme);
+const serverInvite = settings.discord.invite || "notSet";
+
+const DEFAULT_SPECS = {
+  memory: 0,
+  disk: 0,
+  cpu: 0,
+  servers: 0,
+};
 
 router.get("*", async (req, res) => {
   if (req.url === "/") return res.redirect("/login");
@@ -62,7 +70,6 @@ router.get("*", async (req, res) => {
 
   const resources = await getUserResources(req);
   if (resources === "noPackage") {
-    const serverInvite = settings.discord.invite || "notSet";
     return res.status(500).render(pages.error500.file, {
       error:
         "The package assigned to your account does not match any packages in the database.",
@@ -76,26 +83,25 @@ router.get("*", async (req, res) => {
 
   if (!resources) {
     variables.packageInfo = 0;
-    variables.current = 0;
-    variables.extra = {
-      memory: 0,
-      disk: 0,
-      cpu: 0,
-      servers: 0,
-    };
-    variables.total = {
-      memory: 0,
-      disk: 0,
-      cpu: 0,
-      servers: 0,
-    };
+    variables.current = DEFAULT_SPECS;
+    variables.extra = DEFAULT_SPECS;
+    variables.total = DEFAULT_SPECS;
   } else {
     Object.assign(variables, resources);
   }
   variables.timers = {};
 
   if (req.session.variables) delete req.session.variables;
-  res.render(page.file, variables);
+
+  res.render(page.file, variables, (err, out) => {
+    if (!err) return res.send(out);
+
+    const message = err.message.split("\n").pop();
+    return res.status(500).render(pages.error500.file, {
+      error: message,
+      serverInvite,
+    });
+  });
 });
 
 module.exports = router;
