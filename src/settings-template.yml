@@ -21,3 +21,24 @@ pterodactyl:
 database:
   connectionuri:
   name: dashactyl
+
+store:
+  memory:
+    enabled: true
+    cost: 10
+    per: 10
+
+  disk:
+    enabled: true
+    cost: 10
+    per: 10
+
+  cpu:
+    enabled: true
+    cost: 10
+    per: 10
+
+  servers:
+    enabled: true
+    cost: 10
+    per: 10
