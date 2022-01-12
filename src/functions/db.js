@@ -251,7 +251,6 @@ async function setResources(id, resources) {
       $set: { ...resources },
     }
   );
-  console.log(resources);
   return config;
 }
 async function setCoins(id, coins) {

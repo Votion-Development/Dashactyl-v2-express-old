@@ -59,8 +59,8 @@ router.post("/buy_resources", async (req, res) => {
     errors.push("espensive");
     return res.redirect("/store");
   }
-  const ee = await db.setCoins(user_data.discordID, user_data.coins - cost);
-  const e = await db.setResources(user_data.discordID, added);
+  await db.setCoins(user_data.discordID, user_data.coins - cost);
+  await db.setResources(user_data.discordID, added);
   await res.redirect("/store");
 });
 
