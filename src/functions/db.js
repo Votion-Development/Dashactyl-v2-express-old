@@ -219,6 +219,55 @@ async function addPackage(name, memory, disk, cpu, servers, isDefault) {
 async function deletePackage(name) {
   await db.collection("packages").deleteOne({ name });
 }
+async function setResources(id, resources) {
+  const collection = await db.collection("users");
+  if (!collection) return false;
+  const user = await collection.findOne({ discordID: id });
+  if (!user) return false;
+  if (!resources.memory) {
+    resources.memory = user.memory;
+  }
+
+  if (!resources.disk) {
+    resources.disk = user.disk;
+  }
+
+  if (!resources.cpu) {
+    resources.cpu = user.cpu;
+  }
+
+  if (!resources.servers) {
+    resources.servers = user.servers;
+  }
+
+  const config = await collection.updateOne(
+    { discordID: id },
+    {
+      $set: { ...resources },
+    }
+  );
+  console.log(resources);
+  return config;
+}
+async function setCoins(id, coins) {
+  const collection = await db.collection("users");
+  if (!collection) return false;
+  const user = await collection.findOne({ discordID: id });
+  if (!user) return false;
+
+  if (typeof coins !== "number") return false;
+
+  const config = await collection.updateOne(
+    { discordID: id },
+    {
+      $set: {
+        coins: coins,
+      },
+    }
+  );
+
+  return config;
+}
 
 module.exports = {
   getAllAccounts,
@@ -229,4 +278,6 @@ module.exports = {
   getPackages,
   addPackage,
   deletePackage,
+  setResources,
+  setCoins,
 };
